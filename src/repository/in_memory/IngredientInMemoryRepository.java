@@ -3,9 +3,12 @@ package repository.in_memory;
 import model.Ingredient;
 import repository.IngredientsInterface;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class IngredientInMemoryRepository implements IngredientsInterface {
+    private Map<String, Ingredient> ingredientMap = new HashMap<String, Ingredient>();
+
     @Override
     public void create() {
 

@@ -3,9 +3,14 @@ package repository.in_memory;
 import model.Pizza;
 import repository.PizzasInterface;
 
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class PizzaInMemoryRepository implements PizzasInterface {
+
+    private Map<String, Pizza> pizzaMap = new HashMap<String, Pizza>();
+
     @Override
     public void create() {
 
@@ -27,7 +32,6 @@ public class PizzaInMemoryRepository implements PizzasInterface {
     }
 
     @Override
-    public Pizza getByName() {
-        return null;
-    }
+    public Pizza getByName() { return null; }
 }
+

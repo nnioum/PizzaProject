@@ -3,11 +3,12 @@ package repository;
 import model.Pizza;
 
 import java.util.Map;
+import java.util.Set;
 
 public interface PizzasInterface {
-    public void create();
-    public void update();
-    public void delete();
-    public Map<String, Pizza> getAll();
-    public Pizza getByName();
+    public void create(Pizza pizza);
+    public void update(String name, Pizza pizza);
+    public void delete(String name);
+    public Set<String> getAll();
+    public Pizza getByName(String name);
 }

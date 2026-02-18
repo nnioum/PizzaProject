@@ -5,32 +5,35 @@ import repository.IngredientsInterface;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class IngredientInMemoryRepository implements IngredientsInterface {
-    private Map<String, Ingredient> ingredientMap = new HashMap<String, Ingredient>();
+    private final Map<String, Ingredient> ingredients_by_name = new HashMap<String, Ingredient>();
+
 
     @Override
-    public void create() {
-
+    public void create(Ingredient ingredient) {
+        String name = ingredient.getName();
+        ingredients_by_name.put(name, ingredient);
     }
 
     @Override
-    public void update() {
-
+    public void update(String name, Ingredient ingredient) {
+        ingredients_by_name.replace(name, ingredient);
     }
 
     @Override
-    public void delete() {
-
+    public void delete(String name) {
+        ingredients_by_name.remove(name);
     }
 
     @Override
-    public Map<String, Ingredient> getAll() {
-        return Map.of();
+    public Set<String> getAll() {
+        return ingredients_by_name.keySet();
     }
 
     @Override
-    public Ingredient getByName() {
-        return null;
+    public Ingredient getByName(String name) {
+        return ingredients_by_name.get(name);
     }
 }

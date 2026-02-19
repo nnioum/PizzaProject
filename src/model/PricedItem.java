@@ -2,7 +2,7 @@ package model;
 
 import java.util.Objects;
 
-public class PricedItem {
+public abstract class PricedItem {
     private String name;
     private int price;
 

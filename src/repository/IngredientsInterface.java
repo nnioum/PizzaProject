@@ -2,13 +2,14 @@ package repository;
 
 import model.Ingredient;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public interface IngredientsInterface {
-    public void create(Ingredient ingredient);
-    public void update(String name, Ingredient ingredient);
-    public void delete(String name);
-    public Set<String> getAll();
-    public Ingredient getByName(String name);
+    void create(Ingredient ingredient);
+    void update(String name, Ingredient ingredient);
+    void delete(String name);
+    List<Ingredient> getAll();
+    Ingredient getByName(String name);
 }

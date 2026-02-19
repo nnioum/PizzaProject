@@ -5,19 +5,19 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Pizza extends PricedItem{
-    public Crust crust;
+    public Dough dough;
     public Set<Ingredient> ingredients = new HashSet<>();
 
     public Pizza(String name) {
         super(name, 0);
     }
 
-    public Crust getCrust() {
-        return crust;
+    public Dough getCrust() {
+        return dough;
     }
 
-    public void setCrust(Crust crust) {
-        this.crust = crust;
+    public void setCrust(Dough dough) {
+        this.dough = dough;
     }
 
     public Set<Ingredient> getIngredients() {
@@ -33,18 +33,18 @@ public class Pizza extends PricedItem{
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         Pizza pizza = (Pizza) o;
-        return Objects.equals(crust, pizza.crust) && Objects.equals(ingredients, pizza.ingredients);
+        return Objects.equals(dough, pizza.dough) && Objects.equals(ingredients, pizza.ingredients);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), crust, ingredients);
+        return Objects.hash(super.hashCode(), dough, ingredients);
     }
 
     @Override
     public String toString() {
         return "Pizza{" +
-                "crust=" + crust +
+                "crust=" + dough +
                 ", description=" + ingredients +
                 '}';
     }

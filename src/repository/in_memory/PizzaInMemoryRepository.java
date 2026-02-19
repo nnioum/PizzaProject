@@ -3,40 +3,37 @@ package repository.in_memory;
 import model.Pizza;
 import repository.PizzasInterface;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class PizzaInMemoryRepository implements PizzasInterface {
 
-    private final Map<String, Pizza> pizzas_by_name = new HashMap<String, Pizza>();
+    private final Map<String, Pizza> PIZZAS_BY_NAME = new HashMap<String, Pizza>();
 
 
     @Override
     public void create(Pizza pizza) {
         String name = pizza.getName();
-        pizzas_by_name.put(name, pizza);
+        PIZZAS_BY_NAME.put(name, pizza);
     }
 
     @Override
     public void update(String name, Pizza pizza) {
-        pizzas_by_name.replace(name, pizza);
+        PIZZAS_BY_NAME.replace(name, pizza);
     }
 
     @Override
     public void delete(String name) {
-        pizzas_by_name.remove(name);
+        PIZZAS_BY_NAME.remove(name);
     }
 
     @Override
-    public Set<String> getAll() {
-        return pizzas_by_name.keySet();
+    public List<Pizza> getAll() {
+        return new ArrayList<Pizza>(PIZZAS_BY_NAME.values());
     }
 
     @Override
     public Pizza getByName(String name) {
-        return pizzas_by_name.get(name);
+        return PIZZAS_BY_NAME.get(name);
     }
 }
 

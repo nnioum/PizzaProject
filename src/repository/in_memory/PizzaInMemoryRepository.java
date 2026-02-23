@@ -18,7 +18,8 @@ public class PizzaInMemoryRepository implements PizzasInterface {
 
     @Override
     public void update(String name, Pizza pizza) {
-        PIZZAS_BY_NAME.replace(name, pizza);
+        delete(name);
+        create(pizza);
     }
 
     @Override

@@ -12,7 +12,7 @@ public class IngredientService {
     private final IngredientInMemoryRepository ingredientInMemoryRepository = new IngredientInMemoryRepository();
 
     public boolean create(Ingredient ingredient) {
-        if (ingredientValidator.validate(ingredient)) {
+        if (ingredientInMemoryRepository.getByName(ingredient.getName()) == null && ingredientValidator.validate(ingredient)) {
             ingredientInMemoryRepository.create(ingredient);
             return true;
         }
@@ -20,8 +20,10 @@ public class IngredientService {
     }
 
     public boolean update(String name, Ingredient ingredient) {
-        List<String> stringList = getByName();
-        if (name != null && stringList.contains(name) && ingredientValidator.validate(ingredient)) {
+        if (name == null) {
+            return false;
+        }
+        if (ingredientInMemoryRepository.getByName(name) != null && ingredientValidator.validate(ingredient)) {
             ingredientInMemoryRepository.update(name, ingredient);
             return true;
         }
@@ -29,28 +31,25 @@ public class IngredientService {
     }
 
     public boolean delete(String name) {
-        List<String> stringList = getByName();
-        if (name != null && stringList.contains(name)) {
+        if (name == null) {
+            return false;
+        }
+        if (ingredientInMemoryRepository.getByName(name) != null) {
             ingredientInMemoryRepository.delete(name);
             return true;
         }
         return false;
     }
 
-    public List<String> getByName() {
+    public Ingredient getByName(String name) {
+        return ingredientInMemoryRepository.getByName(name);
+    }
+
+    public List<String> getByAll() {
         List<Ingredient> ingredientList = ingredientInMemoryRepository.getAll();
         List<String> stringList = new ArrayList<>();
         for (Ingredient ingredient : ingredientList) {
             stringList.add(ingredient.getName());
-        }
-        return stringList;
-    }
-
-    public List<Integer> getByPrice() {
-        List<Ingredient> ingredientList = ingredientInMemoryRepository.getAll();
-        List<Integer> stringList = new ArrayList<>();
-        for (Ingredient ingredient : ingredientList) {
-            stringList.add(ingredient.getPrice());
         }
         return stringList;
     }

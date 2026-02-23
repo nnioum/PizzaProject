@@ -12,7 +12,7 @@ public class PizzaService {
     private final PizzaInMemoryRepository pizzaInMemoryRepository = new PizzaInMemoryRepository();
 
     public boolean create(Pizza pizza) {
-        if (pizzaValidator.validate(pizza)) {
+        if (pizzaInMemoryRepository.getByName(pizza.getName())==null&&pizzaValidator.validate(pizza)) {
             pizzaInMemoryRepository.create(pizza);
             return true;
         }
@@ -20,8 +20,10 @@ public class PizzaService {
     }
 
     public boolean update(String name, Pizza pizza) {
-        List<String> stringList = getByName();
-        if (name != null && stringList.contains(name) && pizzaValidator.validate(pizza)) {
+        if(name==null){
+            return false;
+        }
+        if (pizzaInMemoryRepository.getByName(name)!=null&& pizzaValidator.validate(pizza)) {
             pizzaInMemoryRepository.update(name, pizza);
             return true;
         }
@@ -29,28 +31,25 @@ public class PizzaService {
     }
 
     public boolean delete(String name) {
-        List<String> stringList = getByName();
-        if (name != null && stringList.contains(name)) {
+        if(name==null){
+            return false;
+        }
+        if (pizzaInMemoryRepository.getByName(name)!=null) {
             pizzaInMemoryRepository.delete(name);
             return true;
         }
         return false;
     }
 
-    public List<String> getByName() {
+    public Pizza getByName(String name) {
+        return pizzaInMemoryRepository.getByName(name);
+    }
+
+    public List<String> getByAll() {
         List<Pizza> pizzaList = pizzaInMemoryRepository.getAll();
         List<String> stringList = new ArrayList<>();
         for (Pizza pizza : pizzaList) {
             stringList.add(pizza.getName());
-        }
-        return stringList;
-    }
-
-    public List<Integer> getByPrice() {
-        List<Pizza> pizzaList = pizzaInMemoryRepository.getAll();
-        List<Integer> stringList = new ArrayList<>();
-        for (Pizza pizza : pizzaList) {
-            stringList.add(pizza.getPrice());
         }
         return stringList;
     }

@@ -12,7 +12,7 @@ public class DoughService {
     private final DoughInMemoryRepository doughInMemoryRepository = new DoughInMemoryRepository();
 
     public boolean create(Dough dough) {
-        if (doughValidator.validate(dough)) {
+        if (doughInMemoryRepository.getByName(dough.getName()) == null && doughValidator.validate(dough)) {
             doughInMemoryRepository.create(dough);
             return true;
         }
@@ -20,8 +20,10 @@ public class DoughService {
     }
 
     public boolean update(String name, Dough dough) {
-        List<String> stringList = getByName();
-        if (name != null && stringList.contains(name) && doughValidator.validate(dough)) {
+        if (name == null) {
+            return false;
+        }
+        if (doughInMemoryRepository.getByName(name) != null && doughValidator.validate(dough)) {
             doughInMemoryRepository.update(name, dough);
             return true;
         }
@@ -29,29 +31,26 @@ public class DoughService {
     }
 
     public boolean delete(String name) {
-        List<String> doughList = getByName();
-        if (name != null && doughList.contains(name)) {
+        if (name == null) {
+            return false;
+        }
+        if (doughInMemoryRepository.getByName(name) != null) {
             doughInMemoryRepository.delete(name);
             return true;
         }
         return false;
     }
 
-    public List<String> getByName() {
+    public Dough getByName(String name) {
+        return doughInMemoryRepository.getByName(name);
+    }
+
+    public List<String> getByAll() {
         List<Dough> doughList = doughInMemoryRepository.getAll();
         List<String> nameList = new ArrayList<>();
         for (Dough dough : doughList) {
             nameList.add(dough.getName());
         }
         return nameList;
-    }
-
-    public List<Integer> getByPrice() {
-        List<Dough> doughList = doughInMemoryRepository.getAll();
-        List<Integer> priceList = new ArrayList<>();
-        for (Dough dough : doughList) {
-            priceList.add(dough.getPrice());
-        }
-        return priceList;
     }
 }

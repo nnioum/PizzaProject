@@ -17,7 +17,8 @@ public class IngredientInMemoryRepository implements IngredientsInterface {
 
     @Override
     public void update(String name, Ingredient ingredient) {
-        INGREDIENTS_BY_NAME.replace(name, ingredient);
+        delete(name);
+        create(ingredient);
     }
 
     @Override

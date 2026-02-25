@@ -2,14 +2,14 @@ package service;
 
 import model.Ingredient;
 import repository.in_memory.IngredientInMemoryRepository;
-import service.validator.InterfaceValidator;
 import service.validator.Validator;
+import service.validator.BaseValidator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class IngredientService {
-    private final InterfaceValidator<Ingredient> ingredientValidator = new Validator<Ingredient>() {};
+    private final Validator<Ingredient> ingredientValidator = new BaseValidator<Ingredient>() {};
     private final IngredientInMemoryRepository ingredientInMemoryRepository = new IngredientInMemoryRepository();
 
     public boolean create(Ingredient ingredient) {

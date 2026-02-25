@@ -4,7 +4,7 @@ import model.Dough;
 
 import java.util.List;
 
-public interface DoughsInterface {
+public interface DoughRepository {
 
     void create(Dough dough);
     void update(String name, Dough dough);

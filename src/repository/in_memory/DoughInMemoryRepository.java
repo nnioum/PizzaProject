@@ -1,11 +1,11 @@
 package repository.in_memory;
 
 import model.Dough;
-import repository.DoughsInterface;
+import repository.DoughRepository;
 
 import java.util.*;
 
-public class DoughInMemoryRepository implements DoughsInterface {
+public class DoughInMemoryRepository implements DoughRepository {
     private final Map<String, Dough> DOUGH_BY_NAME = new HashMap<String, Dough>();
 
     @Override

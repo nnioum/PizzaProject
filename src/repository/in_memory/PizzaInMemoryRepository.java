@@ -1,11 +1,11 @@
 package repository.in_memory;
 
 import model.Pizza;
-import repository.PizzasInterface;
+import repository.PizzaRepository;
 
 import java.util.*;
 
-public class PizzaInMemoryRepository implements PizzasInterface {
+public class PizzaInMemoryRepository implements PizzaRepository {
 
     private final Map<String, Pizza> PIZZAS_BY_NAME = new HashMap<String, Pizza>();
 

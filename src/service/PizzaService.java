@@ -3,12 +3,13 @@ package service;
 import model.Pizza;
 import repository.in_memory.PizzaInMemoryRepository;
 import service.validator.Validator;
+import service.validator.BaseValidator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PizzaService {
-    private final Validator<Pizza> pizzaValidator = new Validator<>();
+    private final Validator<Pizza> pizzaValidator = new BaseValidator<Pizza>() {};
     private final PizzaInMemoryRepository pizzaInMemoryRepository = new PizzaInMemoryRepository();
 
     public boolean create(Pizza pizza) {

@@ -1,11 +1,11 @@
 package repository.in_memory;
 
 import model.Ingredient;
-import repository.IngredientsInterface;
+import repository.IngredientRepository;
 
 import java.util.*;
 
-public class IngredientInMemoryRepository implements IngredientsInterface {
+public class IngredientInMemoryRepository implements IngredientRepository {
     private final Map<String, Ingredient> INGREDIENTS_BY_NAME = new HashMap<String, Ingredient>();
 
 

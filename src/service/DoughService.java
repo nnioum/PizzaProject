@@ -2,13 +2,18 @@ package service;
 
 import model.Dough;
 import repository.in_memory.DoughInMemoryRepository;
+import service.validator.DoughBaseValidator;
 import service.validator.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DoughService {
-    private final Validator<Dough> doughValidator = new Validator<>();
+    public static final Dough CLASSIC_DOUGH = new Dough("Классическая", 100);
+
+    private final Validator<Dough> doughValidator = new DoughBaseValidator<>() {
+    };
+
     private final DoughInMemoryRepository doughInMemoryRepository = new DoughInMemoryRepository();
 
     public boolean create(Dough dough) {
@@ -23,6 +28,9 @@ public class DoughService {
         if (name == null) {
             return false;
         }
+        if (name.equals(CLASSIC_DOUGH.getName())) {
+            dough.setName(name);
+        }
         if (doughInMemoryRepository.getByName(name) != null && doughValidator.validate(dough)) {
             doughInMemoryRepository.update(name, dough);
             return true;
@@ -32,6 +40,9 @@ public class DoughService {
 
     public boolean delete(String name) {
         if (name == null) {
+            return false;
+        }
+        if (name.equals(CLASSIC_DOUGH.getName())) {
             return false;
         }
         if (doughInMemoryRepository.getByName(name) != null) {

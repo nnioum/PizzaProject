@@ -3,10 +3,8 @@ package repository;
 import model.Pizza;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-public interface PizzasInterface {
+public interface PizzaRepository {
     void create(Pizza pizza);
     void update(String name, Pizza pizza);
     void delete(String name);

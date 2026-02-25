@@ -2,7 +2,8 @@ package service.validator;
 
 import model.PricedItem;
 
-public class Validator<T extends PricedItem> {
+public abstract class Validator<T extends PricedItem> implements InterfaceValidator<T> {
+    @Override
     public boolean validate(T item) {
         String name = item.getName();
         int price = item.getPrice();
@@ -10,7 +11,14 @@ public class Validator<T extends PricedItem> {
         if (name == null || name.isEmpty()) {
             return false;
         }
+        if(price<=0){
+            return false;
+        }
+        return doValidate(item);
+    }
 
-        return price > 0;
+    @Override
+    public boolean doValidate(T item) {
+        return true;
     }
 }

@@ -2,13 +2,14 @@ package service;
 
 import model.Dough;
 import repository.in_memory.DoughInMemoryRepository;
-import service.validator.Validator;
+import service.validator.DoughValidator;
+import service.validator.InterfaceValidator;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DoughService {
-    private final Validator<Dough> doughValidator = new Validator<>();
+    private final InterfaceValidator<Dough> doughValidator = new DoughValidator<Dough>(){};
     private final DoughInMemoryRepository doughInMemoryRepository = new DoughInMemoryRepository();
 
     public boolean create(Dough dough) {

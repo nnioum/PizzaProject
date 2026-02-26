@@ -56,7 +56,7 @@ public class DoughService {
         return doughInMemoryRepository.getByName(name);
     }
 
-    public List<String> getByAll() {
+    public List<String> getAllNames() {
         List<Dough> doughList = doughInMemoryRepository.getAll();
         List<String> nameList = new ArrayList<>();
         for (Dough dough : doughList) {

@@ -18,7 +18,7 @@ public class PizzaController {
     private final IngredientService ingredientService = new IngredientService();
 
     public void create(String name, String doughName, String ingredients) {
-        if (ingredients == null) {
+        if (ingredients == null || doughName == null) {
             return;
         }
         String[] listIngredients = ingredients.split(",");
@@ -43,11 +43,11 @@ public class PizzaController {
         pizzaService.update(name, newName, dough, ingredientSet);
     }
 
-    public void delete(String name){
+    public void delete(String name) {
         pizzaService.delete(name);
     }
 
-    public List<String> list(){
+    public List<String> getAllNames() {
         return pizzaService.getAllNames();
     }
 }

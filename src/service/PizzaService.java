@@ -16,8 +16,6 @@ public class PizzaService {
     };
     private final PizzaInMemoryRepository pizzaInMemoryRepository = new PizzaInMemoryRepository();
 
-    private final IngredientService ingredientService = new IngredientService();
-
     private int calculate(Dough dough, Set<Ingredient> ingredients) {
         int price = 0;
         price += dough.getPrice();

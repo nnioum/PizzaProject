@@ -48,6 +48,6 @@ public class PizzaController {
     }
 
     public List<String> list(){
-        return pizzaService.getByAll();
+        return pizzaService.getAllNames();
     }
 }

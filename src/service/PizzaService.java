@@ -15,12 +15,23 @@ public class PizzaService {
     private final Validator<Pizza> pizzaValidator = new BaseValidator<Pizza>() {
     };
     private final PizzaInMemoryRepository pizzaInMemoryRepository = new PizzaInMemoryRepository();
+
     private final IngredientService ingredientService = new IngredientService();
+
+    private int calculate(Dough dough, Set<Ingredient> ingredients) {
+        int price = 0;
+        price += dough.getPrice();
+        for (Ingredient ingredient : ingredients) {
+            price += ingredient.getPrice();
+        }
+        return price;
+    }
 
     public boolean create(String name, Dough dough, Set<Ingredient> ingredients) {
         Pizza pizza = new Pizza(name);
         pizza.setDough(dough);
         pizza.setIngredients(ingredients);
+        pizza.setPrice(calculate(dough, ingredients));
 
         if (pizzaInMemoryRepository.getByName(pizza.getName()) == null && pizzaValidator.validate(pizza)) {
             pizzaInMemoryRepository.create(pizza);
@@ -37,6 +48,7 @@ public class PizzaService {
         Pizza pizza = new Pizza(newName);
         pizza.setDough(dough);
         pizza.setIngredients(ingredients);
+        pizza.setPrice(calculate(dough, ingredients));
 
         if (pizzaInMemoryRepository.getByName(name) != null && pizzaValidator.validate(pizza)) {
             pizzaInMemoryRepository.update(name, pizza);
@@ -60,7 +72,7 @@ public class PizzaService {
         return pizzaInMemoryRepository.getByName(name);
     }
 
-    public List<String> getByAll() {
+    public List<String> getAllNames() {
         List<Pizza> pizzaList = pizzaInMemoryRepository.getAll();
         List<String> stringList = new ArrayList<>();
         for (Pizza pizza : pizzaList) {

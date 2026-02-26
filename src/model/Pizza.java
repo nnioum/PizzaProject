@@ -12,11 +12,11 @@ public class Pizza extends PricedItem{
         super(name, 0);
     }
 
-    public Dough getCrust() {
+    public Dough getDough() {
         return dough;
     }
 
-    public void setCrust(Dough dough) {
+    public void setDough(Dough dough) {
         this.dough = dough;
     }
 

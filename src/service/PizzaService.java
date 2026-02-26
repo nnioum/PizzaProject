@@ -1,5 +1,7 @@
 package service;
 
+import model.Dough;
+import model.Ingredient;
 import model.Pizza;
 import repository.in_memory.PizzaInMemoryRepository;
 import service.validator.Validator;
@@ -7,24 +9,46 @@ import service.validator.BaseValidator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class PizzaService {
-    private final Validator<Pizza> pizzaValidator = new BaseValidator<Pizza>() {};
+    private final Validator<Pizza> pizzaValidator = new BaseValidator<Pizza>() {
+    };
     private final PizzaInMemoryRepository pizzaInMemoryRepository = new PizzaInMemoryRepository();
 
-    public boolean create(Pizza pizza) {
-        if (pizzaInMemoryRepository.getByName(pizza.getName())==null&&pizzaValidator.validate(pizza)) {
+    private int calculate(Dough dough, Set<Ingredient> ingredients) {
+        int price = 0;
+        price += dough.getPrice();
+        for (Ingredient ingredient : ingredients) {
+            price += ingredient.getPrice();
+        }
+        return price;
+    }
+
+    public boolean create(String name, Dough dough, Set<Ingredient> ingredients) {
+        Pizza pizza = new Pizza(name);
+        pizza.setDough(dough);
+        pizza.setIngredients(ingredients);
+        pizza.setPrice(calculate(dough, ingredients));
+
+        if (pizzaInMemoryRepository.getByName(pizza.getName()) == null && pizzaValidator.validate(pizza)) {
             pizzaInMemoryRepository.create(pizza);
             return true;
         }
         return false;
     }
 
-    public boolean update(String name, Pizza pizza) {
-        if(name==null){
+    public boolean update(String name, String newName, Dough dough, Set<Ingredient> ingredients) {
+        if (name == null) {
             return false;
         }
-        if (pizzaInMemoryRepository.getByName(name)!=null&& pizzaValidator.validate(pizza)) {
+
+        Pizza pizza = new Pizza(newName);
+        pizza.setDough(dough);
+        pizza.setIngredients(ingredients);
+        pizza.setPrice(calculate(dough, ingredients));
+
+        if (pizzaInMemoryRepository.getByName(name) != null && pizzaValidator.validate(pizza)) {
             pizzaInMemoryRepository.update(name, pizza);
             return true;
         }
@@ -32,10 +56,10 @@ public class PizzaService {
     }
 
     public boolean delete(String name) {
-        if(name==null){
+        if (name == null) {
             return false;
         }
-        if (pizzaInMemoryRepository.getByName(name)!=null) {
+        if (pizzaInMemoryRepository.getByName(name) != null) {
             pizzaInMemoryRepository.delete(name);
             return true;
         }
@@ -46,7 +70,7 @@ public class PizzaService {
         return pizzaInMemoryRepository.getByName(name);
     }
 
-    public List<String> getByAll() {
+    public List<String> getAllNames() {
         List<Pizza> pizzaList = pizzaInMemoryRepository.getAll();
         List<String> stringList = new ArrayList<>();
         for (Pizza pizza : pizzaList) {

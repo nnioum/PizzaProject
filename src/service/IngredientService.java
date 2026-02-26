@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IngredientService {
-    private final Validator<Ingredient> ingredientValidator = new BaseValidator<Ingredient>() {};
+    private final Validator<Ingredient> ingredientValidator = new BaseValidator<Ingredient>() {
+    };
     private final IngredientInMemoryRepository ingredientInMemoryRepository = new IngredientInMemoryRepository();
 
     public boolean create(Ingredient ingredient) {
@@ -46,7 +47,7 @@ public class IngredientService {
         return ingredientInMemoryRepository.getByName(name);
     }
 
-    public List<String> getByAll() {
+    public List<String> getAllNames() {
         List<Ingredient> ingredientList = ingredientInMemoryRepository.getAll();
         List<String> stringList = new ArrayList<>();
         for (Ingredient ingredient : ingredientList) {

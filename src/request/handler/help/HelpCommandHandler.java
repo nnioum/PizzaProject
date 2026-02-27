@@ -8,13 +8,15 @@ public class HelpCommandHandler extends CommandHandler {
     @Override
     public void handle(String... commandWords) {
         if (commandWords.length == 0) {
-            System.out.println(HELP_BASE);
-            System.out.println(HELP_ADMIN);
-            System.out.println(HELP_ADMIN_BASE);
-            System.out.println(HELP_ADMIN_INGREDIENT);
-            System.out.println(HELP_ADMIN_CRUST);
-            System.out.println(HELP_ADMIN_PIZZA);
-            System.out.println(HELP_ORDER);
+            System.out.println(
+                            HELP_BASE +
+                            HELP_ADMIN +
+                            HELP_ADMIN_BASE +
+                            HELP_ADMIN_INGREDIENT +
+                            HELP_ADMIN_CRUST +
+                            HELP_ADMIN_PIZZA +
+                            HELP_ORDER
+            );
         } else if (commandWords[0].equals("admin")) {
             if (commandWords.length == 1) {
                 System.out.println(HELP_ADMIN);

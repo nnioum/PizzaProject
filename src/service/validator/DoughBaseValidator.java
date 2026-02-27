@@ -2,7 +2,7 @@ package service.validator;
 
 import model.PricedItem;
 
-import static service.DoughService.CLASSIC_DOUGH;
+import static data.GlobalData.CLASSIC_DOUGH;
 
 
 public abstract class DoughBaseValidator<Dough extends PricedItem> extends BaseValidator<Dough> {

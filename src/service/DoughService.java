@@ -8,8 +8,10 @@ import service.validator.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import static data.GlobalData.CLASSIC_DOUGH;
+
+
 public class DoughService {
-    public static final Dough CLASSIC_DOUGH = new Dough("Классическая", 100);
 
     private final Validator<Dough> doughValidator = new DoughBaseValidator<>() {
     };

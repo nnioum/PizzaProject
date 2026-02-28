@@ -1,8 +1,7 @@
-import request.handler.BaseCommands;
+import request.handler.BaseCommand;
 import request.handler.CommandHandler;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 
 import static data.GlobalData.IS_RUNNING;
@@ -17,7 +16,7 @@ public class Main {
             String line = scanner.nextLine();
             String[] blocks = line.split(" ");
             String command = blocks[0];
-            BaseCommands baseCommand = BaseCommands.fromString(command);
+            BaseCommand baseCommand = BaseCommand.fromString(command);
             if (baseCommand == null) {
                 System.out.println("Некорректная команда: " + command);
                 continue;

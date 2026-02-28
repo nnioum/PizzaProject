@@ -4,7 +4,7 @@ import request.handler.admin.AdminCommandHandler;
 import request.handler.exit.ExitCommandHandler;
 import request.handler.help.HelpCommandHandler;
 
-public enum BaseCommands {
+public enum BaseCommand {
     ADMIN("admin", new AdminCommandHandler()),
     EXIT("exit", new ExitCommandHandler()),
     HELP("help", new HelpCommandHandler());
@@ -12,7 +12,7 @@ public enum BaseCommands {
     private final String commandName;
     private final CommandHandler commandHandler;
 
-    BaseCommands(String commandName, CommandHandler commandHandler) {
+    BaseCommand(String commandName, CommandHandler commandHandler) {
         this.commandName = commandName;
         this.commandHandler = commandHandler;
     }
@@ -25,8 +25,8 @@ public enum BaseCommands {
         return commandHandler;
     }
 
-    public static BaseCommands fromString(String command) {
-        for (BaseCommands c : values()) {
+    public static BaseCommand fromString(String command) {
+        for (BaseCommand c : values()) {
             if (c.commandName.equals(command)) {
                 return c;
             }

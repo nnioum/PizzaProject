@@ -1,6 +1,7 @@
 package request.handler.admin.sub_command.handler;
 
 import controller.IngredientController;
+import model.Ingredient;
 import request.handler.admin.sub_command.AdminSubCommandHandler;
 import request.handler.admin.sub_command.ParamsSpec;
 
@@ -31,7 +32,7 @@ public class IngredientCommandHandler extends AdminSubCommandHandler {
     @Override
     public void handle(String... subWords) {//добавить s
         if (subWords.length == 0) {
-            System.out.println("Не указана команда");
+            System.out.println("Не указана команда для ingredient");
             return;
         }
         String resourcesCommand = subWords[0];
@@ -41,15 +42,65 @@ public class IngredientCommandHandler extends AdminSubCommandHandler {
 
         switch (resourcesCommand) {
             case "create":
-                Set<String> requiredParams = paramsSpec.getRequiredParams();
-                for (String param : requiredParams) {
+                Set<String> createRequiredParams = paramsSpec.getRequiredParams();
+                for (String param : createRequiredParams) {
                     if (!params.containsKey(param)) {
                         System.out.println("Параметр " + param + " обязательный");
                         return;
                     }
                 }
-//                ingredientController.create();
+                ingredientController.create(params.get("--name"), params.get("--price"));
+                System.out.println("Создать ингредиент " + params.get("--name"));
+                break;
 
+            case "edit":
+                Set<String> editRequiredParams = paramsSpec.getRequiredParams();
+                for (String param : editRequiredParams) {
+                    if (!params.containsKey(param)) {
+                        System.out.println("Параметр " + param + " обязательный");
+                        return;
+                    }
+                }
+                ingredientController.update(params.get("--name"), params.get("--new-name"), params.get("--price"));
+                System.out.println("Изменен ингредиент " + params.get("--name"));
+                break;
+
+            case "delete":
+                Set<String> deleteRequiredParams = paramsSpec.getRequiredParams();
+                for (String param : deleteRequiredParams) {
+                    if (!params.containsKey(param)) {
+                        System.out.println("Параметр " + param + " обязательный");
+                        return;
+                    }
+                }
+                ingredientController.delete(params.get("--name"));
+                System.out.println("Удален ингредиент " + params.get("--name"));
+                break;
+
+            case "get":
+                Set<String> getRequiredParams = paramsSpec.getRequiredParams();
+                for (String param : getRequiredParams) {
+                    if (!params.containsKey(param)) {
+                        System.out.println("Параметр " + param + " обязательный");
+                        return;
+                    }
+                }
+                Ingredient ingredient = ingredientController.getByName(params.get("--name"));
+                if (ingredient == null) {
+                    System.out.println("Ингредиент " + ingredient + "не найден");
+                }
+                System.out.println(ingredient);
+                break;
+
+            case "list":
+                List<String> allNames = ingredientController.getAllNames();
+                for (String name : allNames) {
+                    System.out.println(name);
+                }
+                break;
+
+            default:
+                System.out.println("Не найдета команда " + resourcesCommand);
         }
     }
 }

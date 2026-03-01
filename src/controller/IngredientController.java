@@ -30,6 +30,10 @@ public class IngredientController {
         ingredientService.delete(name);
     }
 
+    public Ingredient getByName(String name){
+        return ingredientService.getByName(name);
+    }
+
     public List<String> getAllNames() {
         return ingredientService.getAllNames();
     }

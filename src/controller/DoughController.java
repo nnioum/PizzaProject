@@ -30,6 +30,10 @@ public class DoughController {
         doughService.delete(name);
     }
 
+    public Dough getByName(String name){
+        return doughService.getByName(name);
+    }
+
     public List<String> getAllNames() {
         return doughService.getAllNames();
     }

@@ -2,6 +2,7 @@ package controller;
 
 import model.Dough;
 import model.Ingredient;
+import model.Pizza;
 import service.DoughService;
 import service.IngredientService;
 import service.PizzaService;
@@ -45,6 +46,10 @@ public class PizzaController {
 
     public void delete(String name) {
         pizzaService.delete(name);
+    }
+
+    public Pizza getByName(String name){
+        return pizzaService.getByName(name);
     }
 
     public List<String> getAllNames() {

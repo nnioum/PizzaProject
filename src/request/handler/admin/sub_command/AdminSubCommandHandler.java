@@ -12,6 +12,12 @@ public abstract class AdminSubCommandHandler {
     public abstract void handle(String... subWord);
 
     protected Map<String, String> parseParams(String... subLineBlocks) {
+        for(String block: subLineBlocks){
+            if(!block.contains("=")){
+                System.out.println("Некоректна введена команда "+block);
+                return new HashMap<>();
+            }
+        }
         return Arrays.stream(subLineBlocks)
                 .map(s -> s.split("="))
                 .collect(Collectors.toMap(a -> a[0], a -> a[1]));

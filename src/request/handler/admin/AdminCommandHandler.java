@@ -10,6 +10,9 @@ public class AdminCommandHandler extends CommandHandler {
 
     @Override
     public void handle(String... commandWords) {
+        if(commandWords.length==0){
+            return;
+        }
         String command = commandWords[0];
         AdminCommand adminCommand = AdminCommand.fromString(command);
         if(adminCommand==null){
@@ -18,6 +21,6 @@ public class AdminCommandHandler extends CommandHandler {
         }
         String[] restParameters = Arrays.copyOfRange(commandWords, 1, commandWords.length);
         AdminSubCommandHandler adminSubCommandHandler = adminCommand.getAdminSubCommandHandler();
-        adminSubCommandHandler.handle();
+        adminSubCommandHandler.handle(restParameters);
     }
 }

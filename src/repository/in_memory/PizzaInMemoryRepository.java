@@ -7,7 +7,7 @@ import java.util.*;
 
 public class PizzaInMemoryRepository implements PizzaRepository {
 
-    private final Map<String, Pizza> PIZZAS_BY_NAME = new HashMap<String, Pizza>();
+    private final Map<String, Pizza> PIZZAS_BY_NAME = new HashMap<>();
 
 
     @Override

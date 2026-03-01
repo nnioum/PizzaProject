@@ -32,6 +32,7 @@ public class GlobalData {
             "  pizza        Управление пиццами\n";
 
     public static String HELP_ADMIN_INGREDIENT = "INGREDIENT — ИНГРЕДИЕНТЫ:\n" +
+            "\n" +
             "  admin ingredient create --name=<str> --price=<decimal>\n" +
             "    Создать ингредиент\n" +
             "\n" +
@@ -41,7 +42,9 @@ public class GlobalData {
             "  admin ingredient delete --name=<str>\n" +
             "    Удалить ингредиент\n" +
             "\n" +
-            "  admin ingredient list [--sort=name|price] [--desc] [--filter-name=<substr>] [--price-min=<decimal>] [--price-max=<decimal>]\n" +
+            "  admin ingredient get --name=<str>\n" +
+            "\n" +
+            "  admin ingredient list [--sort-by=name|price] [--sort-type=asc|desc] [--name=<substr>] [--price=<integer>]\n" +
             "    Вывести список ингредиентов (с фильтрацией и сортировкой)\n";
 
     public static String HELP_ADMIN_BASE = "BASE — ОСНОВЫ:\n" +
@@ -54,7 +57,9 @@ public class GlobalData {
             "  admin base delete --name=<str>\n" +
             "    Удалить основу\n" +
             "\n" +
-            "  admin base list [--sort=name|price] [--desc] [--filter-name=<substr>]\n" +
+            "  admin base get --name=<str>\n" +
+            "\n" +
+            "  admin base list [--sort-by=name|price] [--sort-type=asc|desc] [--name=<substr>] [--price=<integer>]\n" +
             "    Вывести список основ\n";
 
     public static String HELP_ADMIN_CRUST = "CRUST — БОРТИКИ:\n" +
@@ -67,20 +72,24 @@ public class GlobalData {
             "  admin crust delete --name=<str>\n" +
             "    Удалить бортик\n" +
             "\n" +
-            "  admin crust list [--sort=name|price] [--desc] [--filter-name=<substr>] [--pizza=<pizzaName>]\n" +
+            "  admin crust get --name=<str>\n" +
+            "\n" +
+            "  admin crust list [--sort-by=name|price] [--sort-type=asc|desc] [--name=<substr>] [--price=<integer>]\n" +
             "    Вывести список бортиков (можно проверить совместимость с пиццей)\n";
 
     public static String HELP_ADMIN_PIZZA = "PIZZA — ПИЦЦЫ:\n" +
             "  admin pizza create --name=<str> --base=<baseName> --ingredients=<csv> [--crust=<crustName>]\n" +
             "    Создать пиццу (основа обязательна). Цена = основа + ингредиенты + бортик\n" +
             "\n" +
-            "  admin pizza edit --name=<str> [--new-name=<str>] [--base=<baseName>] [--ingredients=<csv>] [--add-ingredients=<csv>] [--remove-ingredients=<csv>] [--crust=<crustName>|--no-crust]\n" +
+            "  admin pizza edit --name=<str> [--new-name=<str>] [--base=<baseName>] [--ingredients=<csv>][--crust=<crustName>]\n" +
             "    Редактировать пиццу\n" +
             "\n" +
             "  admin pizza delete --name=<str>\n" +
             "    Удалить пиццу\n" +
             "\n" +
-            "  admin pizza list [--filter-ingredient=<name>] [--filter-base=<name>] [--sort=name|price] [--desc]\n" +
+            "  admin pizza get --name=<str>\n" +
+            "\n" +
+            "  admin pizza list [--sort-by=name|price] [--sort-type=asc|desc] [--name=<substr>] [--price=<integer>]\n" +
             "    Вывести список пицц (например, содержащих помидоры)\n" +
             "\n" +
             "ВАЖНО:\n" +

@@ -35,7 +35,7 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
     @Override
     public void handle(String... subWords) {
         if (subWords.length == 0) {
-            System.out.println("Не указана команда для ingredient");
+            System.out.println("Не указана команда для pizza");
             return;
         }
         String resourcesCommand = subWords[0];
@@ -111,7 +111,7 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
                 break;
 
             default:
-                System.out.println("Не найдета команда " + resourcesCommand);
+                System.out.println("Не найдета команда");
         }
     }
 }

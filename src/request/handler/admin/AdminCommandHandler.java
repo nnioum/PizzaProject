@@ -11,6 +11,7 @@ public class AdminCommandHandler extends CommandHandler {
     @Override
     public void handle(String... commandWords) {
         if(commandWords.length==0){
+            System.out.println("Не введена команда для admin");
             return;
         }
         String command = commandWords[0];

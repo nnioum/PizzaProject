@@ -29,10 +29,10 @@ public class PizzaService {
         Pizza pizza = new Pizza(name);
         pizza.setDough(dough);
         pizza.setIngredients(ingredients);
-        pizza.setPrice(calculate(dough, ingredients));
 
         if (pizzaInMemoryRepository.getByName(pizza.getName()) == null && pizzaValidator.validate(pizza)) {
             pizzaInMemoryRepository.create(pizza);
+            pizza.setPrice(calculate(dough, ingredients));
             return true;
         }
         return false;

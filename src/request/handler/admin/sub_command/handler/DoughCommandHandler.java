@@ -104,7 +104,7 @@ public class DoughCommandHandler extends AdminSubCommandHandler {
                 break;
 
             default:
-                System.out.println("Не найдета команда " + resourcesCommand);
+                System.out.println("Не найдета команда");
         }
     }
 }

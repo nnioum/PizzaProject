@@ -100,7 +100,7 @@ public class IngredientCommandHandler extends AdminSubCommandHandler {
                 break;
 
             default:
-                System.out.println("Не найдета команда " + resourcesCommand);
+                System.out.println("Не найдета команда");
         }
     }
 }

@@ -2,7 +2,6 @@ package request.handler.admin.sub_command;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -12,9 +11,9 @@ public abstract class AdminSubCommandHandler {
     public abstract void handle(String... subWord);
 
     protected Map<String, String> parseParams(String... subLineBlocks) {
-        for(String block: subLineBlocks){
-            if(!block.contains("=")){
-                System.out.println("Некоректна введена команда "+block);
+        for (String block : subLineBlocks) {
+            if (!block.contains("=") || block.split("=").length <= 1) {
+                System.out.println("Некоректна введена команда " + block);
                 return new HashMap<>();
             }
         }

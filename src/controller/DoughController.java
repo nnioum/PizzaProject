@@ -10,24 +10,33 @@ public class DoughController {
 
     public void create(String name, String stringPrice) {
         if (stringPrice == null) {
+            System.out.println("Такого теста нету");
             return;
         }
         int price = Integer.parseInt(stringPrice);
         Dough dough = new Dough(name, price);
-        doughService.create(dough);
+        if(!doughService.create(dough)){
+            System.out.println("Некорректные данные");
+            return;
+        }
     }
 
     public void update(String name, String newName, String stringPrice) {
         if (stringPrice == null) {
+            System.out.println("Такого теста нету");
             return;
         }
         int price = Integer.parseInt(stringPrice);
         Dough dough = new Dough(newName, price);
-        doughService.update(name, dough);
+        if(!doughService.update(name, dough)){
+            System.out.println("Некорректные данные");
+        }
     }
 
     public void delete(String name) {
-        doughService.delete(name);
+        if(!doughService.delete(name)){
+            System.out.println("Такого теста нету");
+        }
     }
 
     public Dough getByName(String name){

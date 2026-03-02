@@ -10,20 +10,26 @@ public class IngredientController {
 
     public void create(String name, String stringPrice) {
         if (stringPrice == null) {
+            System.out.println("Нету такого ингредиента");
             return;
         }
         int price = Integer.parseInt(stringPrice);
         Ingredient ingredient = new Ingredient(name, price);
-        ingredientService.create(ingredient);
+        if(!ingredientService.create(ingredient)){
+            System.out.println("Некорректные данные");
+        }
     }
 
     public void update(String name, String newName, String stringPrice) {
         if (stringPrice == null) {
+            System.out.println("Нету такого ингредиента");
             return;
         }
         int price = Integer.parseInt(stringPrice);
         Ingredient ingredient = new Ingredient(newName, price);
-        ingredientService.update(name, ingredient);
+        if(!ingredientService.update(name, ingredient)){
+            System.out.println("Некорректные данные");
+        }
     }
 
     public void delete(String name) {

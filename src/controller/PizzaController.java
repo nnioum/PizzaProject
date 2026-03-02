@@ -20,6 +20,7 @@ public class PizzaController {
 
     public void create(String name, String doughName, String ingredients) {
         if (ingredients == null || doughName == null) {
+            System.out.println("Такой пиццы нету");
             return;
         }
         String[] listIngredients = ingredients.split(",");
@@ -28,11 +29,14 @@ public class PizzaController {
         for (String ingredient : listIngredients) {
             ingredientSet.add(ingredientService.getByName(ingredient));
         }
-        pizzaService.create(name, dough, ingredientSet);
+        if(!pizzaService.create(name, dough, ingredientSet)){
+            System.out.println("Некорректные данные");
+        }
     }
 
     public void update(String name, String newName, String doughName, String ingredients) {
         if (ingredients == null) {
+            System.out.println("Такой пиццы нету");
             return;
         }
         String[] listIngredients = ingredients.split(",");
@@ -41,7 +45,9 @@ public class PizzaController {
         for (String ingredient : listIngredients) {
             ingredientSet.add(ingredientService.getByName(ingredient));
         }
-        pizzaService.update(name, newName, dough, ingredientSet);
+        if(pizzaService.update(name, newName, dough, ingredientSet)){
+            System.out.println("Некорректные данные");
+        }
     }
 
     public void delete(String name) {

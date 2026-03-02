@@ -1,6 +1,8 @@
 package request.handler.admin.sub_command.handler;
 
 import controller.DoughController;
+import exception.NotFoundException;
+import exception.ValidationException;
 import model.Dough;
 import request.handler.admin.sub_command.AdminSubCommandHandler;
 import request.handler.admin.sub_command.ParamsSpec;
@@ -33,7 +35,7 @@ public class DoughCommandHandler extends AdminSubCommandHandler {
     }
 
     @Override
-    public void handle(String... subWords) {
+    public void handle(String... subWords) throws ValidationException, NotFoundException {
         if (subWords.length == 0) {
             System.out.println("Не указана команда для base");
             return;
@@ -54,7 +56,6 @@ public class DoughCommandHandler extends AdminSubCommandHandler {
                 }
                 doughController.create(params.get("--name"), params.get("--price"));
                 System.out.println("Создан ингредиент " + params.get("--name"));
-
                 break;
 
             case "edit":

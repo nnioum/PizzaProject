@@ -1,3 +1,4 @@
+import exception.ApplicationException;
 import request.handler.BaseCommand;
 import request.handler.CommandHandler;
 
@@ -13,17 +14,21 @@ public class Main {
         System.out.println(WELCOME_MESSAGE);
         Scanner scanner = new Scanner(System.in);
         while (IS_RUNNING) {
-            String line = scanner.nextLine();
-            String[] blocks = line.split(" ");
-            String command = blocks[0];
-            BaseCommand baseCommand = BaseCommand.fromString(command);
-            if (baseCommand == null) {
-                System.out.println("Некорректная команда: " + command);
-                continue;
+            try {
+                String line = scanner.nextLine();
+                String[] blocks = line.split(" ");
+                String command = blocks[0];
+                BaseCommand baseCommand = BaseCommand.fromString(command);
+                if (baseCommand == null) {
+                    System.out.println("Некорректная команда: " + command);
+                    continue;
+                }
+                CommandHandler commandHandler = baseCommand.getCommandHandler();
+                String[] subBlocks = Arrays.copyOfRange(blocks, 1, blocks.length);
+                commandHandler.handle(subBlocks);
+            } catch (ApplicationException e) {
+                System.out.println("Ошибка: " + e.getMessage());
             }
-            CommandHandler commandHandler = baseCommand.getCommandHandler();
-            String[] subBlocks = Arrays.copyOfRange(blocks, 1, blocks.length);
-            commandHandler.handle(subBlocks);
         }
     }
 }

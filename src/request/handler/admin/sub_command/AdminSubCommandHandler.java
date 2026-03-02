@@ -1,5 +1,8 @@
 package request.handler.admin.sub_command;
 
+import exception.NotFoundException;
+import exception.ValidationException;
+
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,13 +11,12 @@ import java.util.stream.Collectors;
 public abstract class AdminSubCommandHandler {
     protected final Map<String, ParamsSpec> paramsSpecByCommand = new HashMap<>();
 
-    public abstract void handle(String... subWord);
+    public abstract void handle(String... subWord) throws ValidationException, NotFoundException;
 
-    protected Map<String, String> parseParams(String... subLineBlocks) {
+    protected Map<String, String> parseParams(String... subLineBlocks) throws ValidationException {
         for (String block : subLineBlocks) {
             if (!block.contains("=") || block.split("=").length <= 1) {
-                System.out.println("Некоректна введена команда " + block);
-                return new HashMap<>();
+                throw new ValidationException("Некоректна введена команда " + block);
             }
         }
         return Arrays.stream(subLineBlocks)

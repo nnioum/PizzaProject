@@ -1,6 +1,8 @@
 package request.handler.admin.sub_command.handler;
 
 import controller.IngredientController;
+import exception.NotFoundException;
+import exception.ValidationException;
 import model.Ingredient;
 import request.handler.admin.sub_command.AdminSubCommandHandler;
 import request.handler.admin.sub_command.ParamsSpec;
@@ -30,7 +32,7 @@ public class IngredientCommandHandler extends AdminSubCommandHandler {
     }
 
     @Override
-    public void handle(String... subWords) {//добавить s
+    public void handle(String... subWords) throws ValidationException, NotFoundException {
         if (subWords.length == 0) {
             System.out.println("Не указана команда для ingredient");
             return;
@@ -86,9 +88,6 @@ public class IngredientCommandHandler extends AdminSubCommandHandler {
                     }
                 }
                 Ingredient ingredient = ingredientController.getByName(params.get("--name"));
-                if (ingredient == null) {
-                    System.out.println("Ингредиент " + ingredient + "не найден");
-                }
                 System.out.println(ingredient);
                 break;
 

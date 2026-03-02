@@ -1,5 +1,7 @@
 package controller;
 
+import exception.NotFoundException;
+import exception.ValidationException;
 import model.Ingredient;
 import service.IngredientService;
 
@@ -8,35 +10,19 @@ import java.util.List;
 public class IngredientController {
     private final IngredientService ingredientService = new IngredientService();
 
-    public void create(String name, String stringPrice) {
-        if (stringPrice == null) {
-            System.out.println("Нету такого ингредиента");
-            return;
-        }
-        int price = Integer.parseInt(stringPrice);
-        Ingredient ingredient = new Ingredient(name, price);
-        if(!ingredientService.create(ingredient)){
-            System.out.println("Некорректные данные");
-        }
+    public Ingredient create(String name, String priceStr) throws ValidationException, NotFoundException {
+        return ingredientService.create(name, priceStr);
     }
 
-    public void update(String name, String newName, String stringPrice) {
-        if (stringPrice == null) {
-            System.out.println("Нету такого ингредиента");
-            return;
-        }
-        int price = Integer.parseInt(stringPrice);
-        Ingredient ingredient = new Ingredient(newName, price);
-        if(!ingredientService.update(name, ingredient)){
-            System.out.println("Некорректные данные");
-        }
+    public Ingredient update(String name, String newName, String priceStr) throws ValidationException, NotFoundException {
+        return ingredientService.update(name, priceStr, newName);
     }
 
-    public void delete(String name) {
+    public void delete(String name) throws NotFoundException {
         ingredientService.delete(name);
     }
 
-    public Ingredient getByName(String name){
+    public Ingredient getByName(String name) throws NotFoundException {
         return ingredientService.getByName(name);
     }
 

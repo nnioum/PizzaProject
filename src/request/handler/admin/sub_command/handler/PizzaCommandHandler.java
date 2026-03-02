@@ -1,6 +1,8 @@
 package request.handler.admin.sub_command.handler;
 
 import controller.PizzaController;
+import exception.NotFoundException;
+import exception.ValidationException;
 import model.Pizza;
 import request.handler.admin.sub_command.AdminSubCommandHandler;
 import request.handler.admin.sub_command.ParamsSpec;
@@ -33,7 +35,7 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
     }
 
     @Override
-    public void handle(String... subWords) {
+    public void handle(String... subWords) throws ValidationException, NotFoundException {
         if (subWords.length == 0) {
             System.out.println("Не указана команда для pizza");
             return;

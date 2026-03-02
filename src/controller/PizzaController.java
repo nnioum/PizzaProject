@@ -20,7 +20,7 @@ public class PizzaController {
 
     public void create(String name, String doughName, String ingredients) {
         if (ingredients == null || doughName == null) {
-            System.out.println("Такой пиццы нету");
+            System.out.println("Некорректные данные");
             return;
         }
         String[] listIngredients = ingredients.split(",");

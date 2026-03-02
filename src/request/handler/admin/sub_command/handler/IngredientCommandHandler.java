@@ -50,7 +50,7 @@ public class IngredientCommandHandler extends AdminSubCommandHandler {
                     }
                 }
                 ingredientController.create(params.get("--name"), params.get("--price"));
-                System.out.println("Создать ингредиент " + params.get("--name"));
+                System.out.println("Создан ингредиент " + params.get("--name"));
                 break;
 
             case "edit":

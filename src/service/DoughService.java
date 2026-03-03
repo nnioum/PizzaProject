@@ -1,6 +1,9 @@
 package service;
 
+import exception.NotFoundException;
+import exception.ValidationException;
 import model.Dough;
+import model.Ingredient;
 import repository.in_memory.DoughInMemoryRepository;
 import service.validator.DoughBaseValidator;
 import service.validator.Validator;
@@ -8,52 +11,47 @@ import service.validator.Validator;
 import java.util.ArrayList;
 import java.util.List;
 
+import static data.GlobalData.CLASSIC_DOUGH;
+
+
 public class DoughService {
-    public static final Dough CLASSIC_DOUGH = new Dough("Классическая", 100);
 
     private final Validator<Dough> doughValidator = new DoughBaseValidator<>() {
     };
 
     private final DoughInMemoryRepository doughInMemoryRepository = new DoughInMemoryRepository();
 
-    public boolean create(Dough dough) {
-        if (doughInMemoryRepository.getByName(dough.getName()) == null && doughValidator.validate(dough)) {
-            doughInMemoryRepository.create(dough);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean update(String name, Dough dough) {
-        if (name == null) {
-            return false;
-        }
-        if (name.equals(CLASSIC_DOUGH.getName())) {
-            dough.setName(name);
-        }
-        if (doughInMemoryRepository.getByName(name) != null && doughValidator.validate(dough)) {
-            doughInMemoryRepository.update(name, dough);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean delete(String name) {
-        if (name == null) {
-            return false;
-        }
-        if (name.equals(CLASSIC_DOUGH.getName())) {
-            return false;
-        }
+    public Dough create(String name, String priceStr) throws ValidationException, NotFoundException {
+        Dough dough = buildDough(name, priceStr);
+        doughValidator.validate(dough);
         if (doughInMemoryRepository.getByName(name) != null) {
-            doughInMemoryRepository.delete(name);
-            return true;
+            throw new ValidationException("Основа для пиццы с именем " + name + " уже существует");
         }
-        return false;
+        doughInMemoryRepository.create(dough);
+        return dough;
     }
 
-    public Dough getByName(String name) {
-        return doughInMemoryRepository.getByName(name);
+    public Dough update(String name, String priceStr, String newName) throws ValidationException, NotFoundException {
+        Dough dough = buildDough(name, priceStr, true, newName);
+        doughValidator.validate(dough);
+        doughInMemoryRepository.update(name, dough);
+        return dough;
+    }
+
+    public void delete(String name) throws NotFoundException, ValidationException {
+        getByName(name);
+        if (name.equals(CLASSIC_DOUGH.getName())) {
+            throw new ValidationException("Классическую основу для пиццы удалить нельзя");
+        }
+        doughInMemoryRepository.delete(name);
+    }
+
+    public Dough getByName(String name) throws NotFoundException {
+        Dough dough = doughInMemoryRepository.getByName(name);
+        if (dough == null) {
+            throw new NotFoundException("Тесто с именем " + name + " не найдено");
+        }
+        return dough;
     }
 
     public List<String> getAllNames() {
@@ -63,5 +61,43 @@ public class DoughService {
             nameList.add(dough.getName());
         }
         return nameList;
+    }
+
+    private Dough buildDough(String name, String priceStr) throws ValidationException, NotFoundException {
+        return buildDough(name, priceStr, false, null);
+    }
+
+    private Dough buildDough(String name, String priceStr, boolean isExisting, String newName) throws ValidationException, NotFoundException {
+        if (name == null) {
+            throw new ValidationException("Имя основы для пиццы - обязательное поле");
+        }
+        Integer price = parsePrice(priceStr);
+        if (isExisting) {
+            Dough existingDough = doughInMemoryRepository.getByName(name);
+            if (existingDough == null) {
+                throw new NotFoundException("Основа для пиццы с именем " + name + " не найден");
+            }
+            newName = newName == null ? existingDough.getName() : newName;
+            price = price == null ? existingDough.getPrice() : price;
+            if (name.equals(CLASSIC_DOUGH.getName())) {
+                newName = name;
+            }
+            return new Dough(newName, price);
+        }
+        if (price == null) {
+            throw new ValidationException("Цена - обязательное поле и должна быть положительным числом");
+        }
+        return new Dough(name, price);
+    }
+
+    private Integer parsePrice(String priceStr) throws ValidationException {
+        if (priceStr == null) {
+            return null;
+        }
+        try {
+            return Integer.parseInt(priceStr);
+        } catch (NumberFormatException e) {
+            throw new ValidationException("Цена должна быть валидным положительным числом");
+        }
     }
 }

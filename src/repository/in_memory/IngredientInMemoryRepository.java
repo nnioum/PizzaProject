@@ -6,7 +6,7 @@ import repository.IngredientRepository;
 import java.util.*;
 
 public class IngredientInMemoryRepository implements IngredientRepository {
-    private final Map<String, Ingredient> INGREDIENTS_BY_NAME = new HashMap<String, Ingredient>();
+    private final Map<String, Ingredient> INGREDIENTS_BY_NAME = new HashMap<>();
 
 
     @Override

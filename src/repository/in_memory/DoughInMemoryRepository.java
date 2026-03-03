@@ -5,8 +5,15 @@ import repository.DoughRepository;
 
 import java.util.*;
 
+import static data.GlobalData.CLASSIC_DOUGH;
+
 public class DoughInMemoryRepository implements DoughRepository {
-    private final Map<String, Dough> DOUGH_BY_NAME = new HashMap<String, Dough>();
+    private final Map<String, Dough> DOUGH_BY_NAME;
+
+    public DoughInMemoryRepository() {
+        DOUGH_BY_NAME = new HashMap<>();
+        DOUGH_BY_NAME.put(CLASSIC_DOUGH.getName(), CLASSIC_DOUGH);
+    }
 
     @Override
     public void create(Dough dough) {

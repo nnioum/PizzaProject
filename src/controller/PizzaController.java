@@ -1,7 +1,10 @@
 package controller;
 
+import exception.NotFoundException;
+import exception.ValidationException;
 import model.Dough;
 import model.Ingredient;
+import model.Pizza;
 import service.DoughService;
 import service.IngredientService;
 import service.PizzaService;
@@ -17,34 +20,20 @@ public class PizzaController {
 
     private final IngredientService ingredientService = new IngredientService();
 
-    public void create(String name, String doughName, String ingredients) {
-        if (ingredients == null || doughName == null) {
-            return;
-        }
-        String[] listIngredients = ingredients.split(",");
-        Dough dough = doughService.getByName(doughName);
-        Set<Ingredient> ingredientSet = new HashSet<>();
-        for (String ingredient : listIngredients) {
-            ingredientSet.add(ingredientService.getByName(ingredient));
-        }
-        pizzaService.create(name, dough, ingredientSet);
+    public void create(String name, String doughName, String ingredients) throws ValidationException, NotFoundException {
+        pizzaService.create(name, doughName, ingredients);
     }
 
-    public void update(String name, String newName, String doughName, String ingredients) {
-        if (ingredients == null) {
-            return;
-        }
-        String[] listIngredients = ingredients.split(",");
-        Dough dough = doughService.getByName(doughName);
-        Set<Ingredient> ingredientSet = new HashSet<>();
-        for (String ingredient : listIngredients) {
-            ingredientSet.add(ingredientService.getByName(ingredient));
-        }
-        pizzaService.update(name, newName, dough, ingredientSet);
+    public void update(String name, String newName, String doughName, String ingredients) throws ValidationException, NotFoundException {
+        pizzaService.update(name, doughName, ingredients, newName);
     }
 
-    public void delete(String name) {
+    public void delete(String name) throws NotFoundException {
         pizzaService.delete(name);
+    }
+
+    public Pizza getByName(String name) throws NotFoundException {
+        return pizzaService.getByName(name);
     }
 
     public List<String> getAllNames() {

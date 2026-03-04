@@ -23,7 +23,7 @@ public class OrderService {
         if (orderSystems != null && orderSystems.getOrderStatus() == OrderStatus.SUBMITTED) {
             throw new NotFoundException("Заказ " + orderSystems.getOrderId() + " уже завершен\nИзменить невозможно");
         }
-        if (!order.getCreatedDate().isAfter(order.getScheduledDate())) {
+        if (order.getCreatedDate().isAfter(order.getScheduledDate())) {
             throw new ValidationException("Должно быть указано будующее время");
         }
         if (orderSystems == null) {

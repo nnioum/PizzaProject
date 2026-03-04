@@ -18,7 +18,7 @@ public class EditCommandHandler extends OrderSubCommandHandler {
         }
         String id = subWord[0];
         Map<String, String> params = parseParams(Arrays.copyOfRange(subWord, 1, subWord.length));
-        orderController.update(id, params.get("--commit"), params.get("--scheduled-date"));
+        orderController.update(id, params.get("--comment"), params.get("--scheduled-date"));
         System.out.println("Изменен заказ по id: " + id);
     }
 }

@@ -2,7 +2,7 @@ package request.handler.help;
 
 import request.handler.CommandHandler;
 
-import static data.GlobalData.*;
+import static admin.data.GlobalData.*;
 
 public class HelpCommandHandler extends CommandHandler {
     @Override

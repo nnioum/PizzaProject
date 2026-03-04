@@ -5,8 +5,8 @@ import request.handler.CommandHandler;
 import java.util.Arrays;
 import java.util.Scanner;
 
-import static data.GlobalData.IS_RUNNING;
-import static data.GlobalData.WELCOME_MESSAGE;
+import static admin.data.GlobalData.IS_RUNNING;
+import static admin.data.GlobalData.WELCOME_MESSAGE;
 
 public class Main {
 

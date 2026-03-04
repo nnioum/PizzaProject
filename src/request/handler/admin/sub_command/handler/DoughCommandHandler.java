@@ -1,9 +1,9 @@
 package request.handler.admin.sub_command.handler;
 
-import controller.DoughController;
+import admin.controller.DoughController;
 import exception.NotFoundException;
 import exception.ValidationException;
-import model.Dough;
+import admin.model.Dough;
 import request.handler.admin.sub_command.AdminSubCommandHandler;
 import request.handler.admin.sub_command.ParamsSpec;
 

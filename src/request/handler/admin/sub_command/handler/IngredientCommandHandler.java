@@ -1,9 +1,9 @@
 package request.handler.admin.sub_command.handler;
 
-import controller.IngredientController;
+import admin.controller.IngredientController;
 import exception.NotFoundException;
 import exception.ValidationException;
-import model.Ingredient;
+import admin.model.Ingredient;
 import request.handler.admin.sub_command.AdminSubCommandHandler;
 import request.handler.admin.sub_command.ParamsSpec;
 

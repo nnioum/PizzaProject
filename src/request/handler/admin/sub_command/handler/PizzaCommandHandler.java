@@ -1,9 +1,9 @@
 package request.handler.admin.sub_command.handler;
 
-import controller.PizzaController;
+import admin.controller.PizzaController;
 import exception.NotFoundException;
 import exception.ValidationException;
-import model.Pizza;
+import admin.model.Pizza;
 import request.handler.admin.sub_command.AdminSubCommandHandler;
 import request.handler.admin.sub_command.ParamsSpec;
 

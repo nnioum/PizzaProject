@@ -12,6 +12,10 @@ public class OrderService {
     private final OrderRepository orderRepository = OrderRepository.getInstance();
 
     public void create(Order order) throws ValidationException {
+        Order orderSystems = orderRepository.getById(order.getOrderId());
+        if (orderSystems != null) {
+            throw new ValidationException("Заказ с id: " + order.getOrderId() + " уже создан");
+        }
         if (order.getCreatedDate().isAfter(order.getScheduledDate())) {
             throw new ValidationException("Должно быть указано будующее время");
         }

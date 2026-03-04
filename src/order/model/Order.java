@@ -1,10 +1,9 @@
 package order.model;
 
-import order.model.pizza.PizzaOrder;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
@@ -14,12 +13,13 @@ public class Order {
     private BigDecimal totalPrice; //обязательное
     private String comment;
     private List<String> pizzaOrderIds; //обязательное
-    private OffsetDateTime createdDate; //обязательное
-    private OffsetDateTime scheduledDate;
+    private LocalDateTime createdDate; //обязательное
+    private LocalDateTime scheduledDate;
 
     public Order() {
         this.totalPrice = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP);
         this.orderStatus = OrderStatus.OPEN;
+        pizzaOrderIds = new ArrayList<>();
     }
 
     public String getOrderId() {
@@ -62,30 +62,36 @@ public class Order {
         this.pizzaOrderIds = pizzaOrderIds;
     }
 
-    public OffsetDateTime getCreatedDate() {
+    public LocalDateTime getCreatedDate() {
         return createdDate;
     }
 
-    public void setCreatedDate(OffsetDateTime createdDate) {
+    public void setCreatedDate(LocalDateTime createdDate) {
         this.createdDate = createdDate;
     }
 
-    public OffsetDateTime getScheduledDate() {
+    public LocalDateTime getScheduledDate() {
         return scheduledDate;
     }
 
-    public void setScheduledDate(OffsetDateTime scheduledDate) {
+    public void setScheduledDate(LocalDateTime scheduledDate) {
         this.scheduledDate = scheduledDate;
     }
 
     @Override
     public String toString() {
-        return "id " + orderId +
-                "\nСтатус заказа " + orderStatus +
-                "\nЦена " + totalPrice +
-                "\nКомметарий " + comment +
-                "\nId пицц " + pizzaOrderIds +
-                "\nВремя создание заказа " + createdDate +
-                "\nБудет готов в " + scheduledDate + "\n";
+        String pizzaOrderIdsStr;
+        if (pizzaOrderIds == null) {
+            pizzaOrderIdsStr = "";
+        } else {
+            pizzaOrderIdsStr = String.join(", ", pizzaOrderIds);
+        }
+        return "id - " + orderId +
+                "\nСтатус заказа - " + orderStatus +
+                "\nЦена - " + totalPrice +
+                "\nКомметарий - " + comment +
+                "\nId пицц - " + pizzaOrderIdsStr +
+                "\nВремя создание заказа - " + createdDate +
+                "\nБудет готов в - " + scheduledDate + "\n";
     }
 }

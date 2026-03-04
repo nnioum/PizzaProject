@@ -41,6 +41,7 @@ public abstract class PricedItem {
 
     @Override
     public String toString() {
-        return "Имя - " + name + "\nЦена - " + price;
+        return "Имя - " + name +
+                "\nЦена - " + price;
     }
 }

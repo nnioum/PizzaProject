@@ -1,5 +1,6 @@
 package admin.model;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -43,10 +44,16 @@ public class Pizza extends PricedItem {
 
     @Override
     public String toString() {
+        String ingredientsStr;
+        if (ingredients == null) {
+            ingredientsStr = "";
+        } else {
+            ingredientsStr = String.join("\n\n", ingredients.stream().map(PricedItem::toString).toList());
+        }
         return "Имя - " + getName() +
                 "\nЦена - " + getPrice() +
                 "\nОснова для пиццы - " + dough.getName() +
-                "\nнгредиенты - " + ingredients;
+                "\nИнгредиенты - " + ingredientsStr;
     }
 
 }

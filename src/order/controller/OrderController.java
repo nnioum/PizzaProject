@@ -2,10 +2,11 @@ package order.controller;
 
 import exception.NotFoundException;
 import exception.ValidationException;
+import order.helper.DateTimeHelper;
 import order.model.Order;
 import order.service.OrderService;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -43,12 +44,12 @@ public class OrderController {
         Order order = new Order();
         String idOrder = id == null ? UUID.randomUUID().toString() : id;
         String commentOrder = comment == null ? "" : comment;
-        OffsetDateTime scheduled = scheduledDate == null ? OffsetDateTime.now().plusHours(1) : OffsetDateTime.parse(scheduledDate);
-        OffsetDateTime today = OffsetDateTime.now();
+        LocalDateTime scheduled = scheduledDate == null ? LocalDateTime.now().plusHours(1) : DateTimeHelper.parseToLocalDateTime(scheduledDate);
+        LocalDateTime today = LocalDateTime.now();
         if(isExisting){
             Order orderSystem= orderService.getById(id);
             commentOrder = comment == null ? orderSystem.getComment() : comment;
-            scheduled = scheduledDate == null ? orderSystem.getScheduledDate() : OffsetDateTime.parse(scheduledDate);
+            scheduled = scheduledDate == null ? orderSystem.getScheduledDate() : DateTimeHelper.parseToLocalDateTime(scheduledDate);
             today = orderSystem.getCreatedDate();
         }
         order.setOrderId(idOrder);

@@ -3,6 +3,7 @@ package request.handler.order.sub_command.handler;
 import exception.NotFoundException;
 import exception.ValidationException;
 import order.controller.OrderController;
+import order.controller.view.OrderView;
 import order.model.Order;
 import request.handler.order.sub_command.OrderSubCommandHandler;
 
@@ -17,7 +18,7 @@ public class GetCommandHandler extends OrderSubCommandHandler {
             throw new ValidationException("Параметр id обязательный");
         }
         String id = subWord[0];
-        Order order = orderController.getById(id);
-        System.out.println(order);
+        OrderView orderView = orderController.getById(id);
+        System.out.println(orderView);
     }
 }

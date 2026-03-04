@@ -7,8 +7,8 @@ public class HalvedPizzaOrder extends PizzaOrder {
     private final PizzaHalf leftHalf;
     private final PizzaHalf rightHalf;
 
-    public HalvedPizzaOrder(String pizzaSize, String doughName) {
-        super(pizzaSize, doughName);
+    public HalvedPizzaOrder(String pizzaSize, String doughName, String orderId) {
+        super(pizzaSize, doughName, orderId, PizzaType.HALVED);
         this.leftHalf = new PizzaHalf();
         this.rightHalf = new PizzaHalf();
     }
@@ -40,5 +40,17 @@ public class HalvedPizzaOrder extends PizzaOrder {
         public void setDoubledIngredients(Set<String> doubledIngredients) {
             this.doubledIngredients = doubledIngredients;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "id='" + id +
+                "\nТип пиццы - " + pizzaType +
+                "\nРазмер пиццы - " + pizzaSize +
+                "\nОснова для пиццы - " + doughName +
+                "\nПервая половина пиццы - " + leftHalf +
+                "\nВторая половина пиццы - " + rightHalf +
+                "\nЦена - " + price +
+                "\nid Заказа - " + orderId;
     }
 }

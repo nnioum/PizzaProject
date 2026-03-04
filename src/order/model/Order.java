@@ -12,14 +12,12 @@ public class Order {
     private OrderStatus orderStatus; //обязательное
     private BigDecimal totalPrice; //обязательное
     private String comment;
-    private List<String> pizzaOrderIds; //обязательное
     private LocalDateTime createdDate; //обязательное
     private LocalDateTime scheduledDate;
 
     public Order() {
         this.totalPrice = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP);
         this.orderStatus = OrderStatus.OPEN;
-        pizzaOrderIds = new ArrayList<>();
     }
 
     public String getOrderId() {
@@ -54,14 +52,6 @@ public class Order {
         this.comment = comment;
     }
 
-    public List<String> getPizzaOrderIds() {
-        return pizzaOrderIds;
-    }
-
-    public void setPizzaOrderIds(List<String> pizzaOrderIds) {
-        this.pizzaOrderIds = pizzaOrderIds;
-    }
-
     public LocalDateTime getCreatedDate() {
         return createdDate;
     }
@@ -80,18 +70,11 @@ public class Order {
 
     @Override
     public String toString() {
-        String pizzaOrderIdsStr;
-        if (pizzaOrderIds == null) {
-            pizzaOrderIdsStr = "";
-        } else {
-            pizzaOrderIdsStr = String.join(", ", pizzaOrderIds);
-        }
         return "id - " + orderId +
                 "\nСтатус заказа - " + orderStatus +
                 "\nЦена - " + totalPrice +
                 "\nКомметарий - " + comment +
-                "\nId пицц - " + pizzaOrderIdsStr +
                 "\nВремя создание заказа - " + createdDate +
-                "\nБудет готов в - " + scheduledDate + "\n";
+                "\nБудет готов в - " + scheduledDate;
     }
 }

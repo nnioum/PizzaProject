@@ -3,6 +3,7 @@ package request.handler.order.sub_command.handler;
 import exception.NotFoundException;
 import exception.ValidationException;
 import order.controller.OrderController;
+import order.controller.view.OrderView;
 import order.model.Order;
 import request.handler.order.sub_command.OrderSubCommandHandler;
 
@@ -13,8 +14,8 @@ public class ListCommandHandler extends OrderSubCommandHandler {
 
     @Override
     public void handle(String... subWord) throws ValidationException, NotFoundException {
-        List<Order> all = orderController.getAll();
-        for(Order order: all){
+        List<OrderView> all = orderController.getAll();
+        for(OrderView order: all){
             System.out.println(order);
         }
     }

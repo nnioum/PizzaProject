@@ -6,8 +6,8 @@ import java.util.Set;
 public class SlicedPizzaOrder extends PizzaOrder {
     private final Slice[] slices;
 
-    public SlicedPizzaOrder(String pizzaSize, String doughName) {
-        super(pizzaSize, doughName);
+    public SlicedPizzaOrder(String pizzaSize, String doughName, String orderId) {
+        super(pizzaSize, doughName, orderId, PizzaType.SLICED);
         this.slices = new Slice[this.getPizzaSize().getSliceNumber()];
     }
 

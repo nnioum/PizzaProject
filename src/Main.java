@@ -19,6 +19,10 @@ public class Main {
             try {
                 String line = scanner.nextLine();
                 String[] blocks = splitCommandLine(line).toArray(new String[0]);
+                if (blocks.length == 0) {
+                    System.out.println("Команда не найдена");
+                    continue;
+                }
                 String command = blocks[0];
                 BaseCommand baseCommand = BaseCommand.fromString(command);
                 if (baseCommand == null) {

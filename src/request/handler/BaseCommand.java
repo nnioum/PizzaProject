@@ -4,14 +4,14 @@ import request.handler.admin.AdminCommandHandler;
 import request.handler.exit.ExitCommandHandler;
 import request.handler.help.HelpCommandHandler;
 import request.handler.order.OrderCommandHandler;
-import request.handler.order_pizza.OrderPizzaCommandHandler;
+import request.handler.pizza_order.PizzaOrderCommandHandler;
 
 public enum BaseCommand {
     ADMIN("admin", new AdminCommandHandler()),
     EXIT("exit", new ExitCommandHandler()),
     HELP("help", new HelpCommandHandler()),
     ORDER("order", new OrderCommandHandler()),
-    ORDER_PIZZA("order-pizza", new OrderPizzaCommandHandler());
+    PIZZA_ORDER("pizza-order", new PizzaOrderCommandHandler());
 
     private final String commandName;
     private final CommandHandler commandHandler;
@@ -37,6 +37,4 @@ public enum BaseCommand {
         }
         return null;
     }
-
-
 }

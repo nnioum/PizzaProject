@@ -24,6 +24,7 @@ public class HalvedPizzaOrder extends PizzaOrder {
     public static class PizzaHalf {
         private String name;
         private Set<String> doubledIngredients;
+        private boolean isValid;
 
         public String getName() {
             return name;
@@ -35,6 +36,14 @@ public class HalvedPizzaOrder extends PizzaOrder {
 
         public Set<String> getDoubledIngredients() {
             return doubledIngredients;
+        }
+
+        public boolean isValid() {
+            return isValid;
+        }
+
+        public void setValid(boolean valid) {
+            isValid = valid;
         }
 
         public void setDoubledIngredients(Set<String> doubledIngredients) {

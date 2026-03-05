@@ -7,17 +7,13 @@ import request.handler.order.sub_command.OrderSubCommandHandler;
 
 import java.util.Map;
 
-public class SubmitCommandHandler extends OrderSubCommandHandler {
+public class SplitCommandHandler extends OrderSubCommandHandler {
     private final OrderController orderController = new OrderController();
 
     @Override
     public void handle(String... subWord) throws ValidationException, NotFoundException {
-        if (subWord.length == 0) {
-            throw new ValidationException("Параметр id обязательный");
-        }
         Map<String, String> params = parseParams(subWord);
-        String id = params.get("--id");
-        orderController.submit(id);
-        System.out.println("Создание заказа " + id + " заверешен\nИзменить заказ больше невозможно");
+        orderController.split(params.get("--id"), params.get("--number"));
+        System.out.println("Ваш счет был разделен");
     }
 }

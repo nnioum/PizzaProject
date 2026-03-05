@@ -17,7 +17,8 @@ public class GetCommandHandler extends OrderSubCommandHandler {
         if(subWord.length==0){
             throw new ValidationException("Параметр id обязательный");
         }
-        String id = subWord[0];
+        Map<String, String> params = parseParams(subWord);
+        String id = params.get("--id");
         OrderView orderView = orderController.getById(id);
         System.out.println(orderView);
     }

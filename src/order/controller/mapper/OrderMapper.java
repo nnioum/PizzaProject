@@ -17,6 +17,7 @@ public class OrderMapper {
                 order.getOrderId(),
                 order.getOrderStatus(),
                 order.getTotalPrice(),
+                order.getPricePerPerson(),
                 order.getComment(),
                 order.getCreatedDate(),
                 order.getScheduledDate(),

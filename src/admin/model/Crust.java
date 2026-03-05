@@ -38,9 +38,9 @@ public class Crust extends PricedItem {
 
     @Override
     public String toString() {
-        return "Crust{" +
-                "ingredients=" + ingredients +
-                ", allowedPizzas=" + allowedPizzas +
-                '}';
+        return "\nИмя - "+getName()+
+                "\nЦена - "+getPrice()+
+                "\nИнгредиенты - " + ingredients +
+                "\nСписок разрешенных пицц - " + allowedPizzas;
     }
 }

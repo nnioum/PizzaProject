@@ -11,15 +11,17 @@ public class OrderView {
     private final String orderId;
     private final OrderStatus orderStatus;
     private final BigDecimal totalPrice;
+    private final BigDecimal pricePerPerson;
     private final String comment;
     private final LocalDateTime createdDate;
     private final LocalDateTime scheduledDate;
     private final List<PizzaOrder> pizzaOrders;
 
-    public OrderView(String orderId, OrderStatus orderStatus, BigDecimal totalPrice, String comment, LocalDateTime createdDate, LocalDateTime scheduledDate, List<PizzaOrder> pizzaOrders) {
+    public OrderView(String orderId, OrderStatus orderStatus, BigDecimal totalPrice, BigDecimal pricePerPerson, String comment, LocalDateTime createdDate, LocalDateTime scheduledDate, List<PizzaOrder> pizzaOrders) {
         this.orderId = orderId;
         this.orderStatus = orderStatus;
         this.totalPrice = totalPrice;
+        this.pricePerPerson = pricePerPerson;
         this.comment = comment;
         this.createdDate = createdDate;
         this.scheduledDate = scheduledDate;
@@ -54,12 +56,17 @@ public class OrderView {
         return pizzaOrders;
     }
 
+    public BigDecimal getPricePerPerson() {
+        return pricePerPerson;
+    }
+
     @Override
     public String toString() {
         return "id - " + orderId +
                 "\nСтатус заказа - " + orderStatus +
                 "\nПиццы - " + pizzaOrders +
-                "\nЦена - " + totalPrice +
+                "\nЦена заказа - " + totalPrice +
+                "\nЦена разделенная - " + pricePerPerson +
                 "\nКомметарий - " + comment +
                 "\nВремя создание заказа - " + createdDate +
                 "\nБудет готов в - " + scheduledDate + "\n";

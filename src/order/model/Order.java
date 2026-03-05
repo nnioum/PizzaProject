@@ -3,8 +3,8 @@ package order.model;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
+import static java.math.BigDecimal.ROUND_HALF_UP;
 
 public class Order {
 
@@ -14,9 +14,11 @@ public class Order {
     private String comment;
     private LocalDateTime createdDate; //обязательное
     private LocalDateTime scheduledDate;
+    private BigDecimal pricePerPerson;
 
     public Order() {
-        this.totalPrice = new BigDecimal("0.00").setScale(2, RoundingMode.HALF_UP);
+        this.totalPrice = new BigDecimal("0.00").setScale(2, ROUND_HALF_UP);
+        this.pricePerPerson = new BigDecimal("1.00").setScale(2, ROUND_HALF_UP);
         this.orderStatus = OrderStatus.OPEN;
     }
 
@@ -68,11 +70,20 @@ public class Order {
         this.scheduledDate = scheduledDate;
     }
 
+    public BigDecimal getPricePerPerson() {
+        return pricePerPerson;
+    }
+
+    public void setPricePerPerson(BigDecimal pricePerPerson) {
+        this.pricePerPerson = pricePerPerson;
+    }
+
     @Override
     public String toString() {
         return "id - " + orderId +
                 "\nСтатус заказа - " + orderStatus +
-                "\nЦена - " + totalPrice +
+                "\nЦена для одного - " + pricePerPerson +
+                "\nЦена заказа - " + totalPrice +
                 "\nКомметарий - " + comment +
                 "\nВремя создание заказа - " + createdDate +
                 "\nБудет готов в - " + scheduledDate;

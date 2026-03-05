@@ -17,7 +17,7 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
 
     public PizzaCommandHandler() {
         ParamsSpec createParamsSpec = new ParamsSpec();
-        createParamsSpec.addRequiredParams(List.of("--name", "--base", "--ingredients"));
+        createParamsSpec.addRequiredParams(List.of("--name", "--dough", "--ingredients"));
         paramsSpecByCommand.put("create", createParamsSpec);
 
         ParamsSpec editParamsSpec = new ParamsSpec();
@@ -56,7 +56,7 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
                         return;
                     }
                 }
-                pizzaController.create(params.get("--name"), params.get("--base"), params.get("--ingredients"));
+                pizzaController.create(params.get("--name"), params.get("--dough"), params.get("--ingredients"));
                 System.out.println("Создана пицца " + params.get("--name"));
                 break;
 
@@ -69,7 +69,7 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
                     }
                 }
                 pizzaController.update(params.get("--name"), params.get("--new-name"),
-                        params.get("--base"), params.get("--ingredients"));
+                        params.get("--dough"), params.get("--ingredients"));
                 System.out.println("Изменена пицца " + params.get("--name"));
                 break;
 

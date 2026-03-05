@@ -6,7 +6,10 @@ import order.model.Order;
 import order.model.OrderStatus;
 import order.repository.OrderRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
+
+import static java.math.BigDecimal.ROUND_HALF_UP;
 
 public class OrderService {
     private final OrderRepository orderRepository = OrderRepository.getInstance();
@@ -54,5 +57,21 @@ public class OrderService {
 
     public void submit(String id) {
         orderRepository.submit(id);
+    }
+
+    public void editPrice(String id, BigDecimal price){
+        orderRepository.editPrice(id, price);
+    }
+
+    public void split(String id, BigDecimal count) throws NotFoundException, ValidationException {
+        Order order = getById(id);
+        if(order.getOrderStatus()==OrderStatus.CLOSED){
+            throw new ValidationException("Разделить счет возможно только на этапе submit");
+        }
+        orderRepository.split(id, order.getTotalPrice().divide(count, ROUND_HALF_UP));
+    }
+
+    public void closed(String id){
+        orderRepository.closed(id);
     }
 }

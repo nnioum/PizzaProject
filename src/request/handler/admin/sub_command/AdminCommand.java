@@ -7,7 +7,7 @@ import request.handler.admin.sub_command.handler.PizzaCommandHandler;
 
 public enum AdminCommand {
     INGREDIENT("ingredient", new IngredientCommandHandler()),
-    BASE("base", new DoughCommandHandler()),
+    BASE("dough", new DoughCommandHandler()),
     PIZZA("pizza", new PizzaCommandHandler()),
     CRUST("crust", new CrustCommandHandler());
 

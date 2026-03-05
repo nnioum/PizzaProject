@@ -11,29 +11,40 @@ public class GlobalData {
     public static String WELCOME_MESSAGE = "Добро пожаловать в Конструктор Пиццы!";
 
     public static String HELP_BASE = """
+            ============================================================================================================
+            КОНСТРУКТОР ПИЦЦЫ — CLI
+            ============================================================================================================
+            
             ИСПОЛЬЗОВАНИЕ:
                 <command> [options]
             
             ОСНОВНЫЕ КОМАНДЫ:
-              admin      Режим администратора: управление справочниками
-              order      Режим заказов: создание и управление заказами
-              help       Показать справку по команде (например: help admin)
-              exit       Выход из программы
+              admin         Режим администратора: управление справочниками
+              order         Режим заказов: создание и управление заказами
+              pizza-order   Режим управления пиццами в заказе
+              help          Показать справку по команде\s
+              exit          Выход из программы
+            
             """;
 
-    public static String HELP_ADMIN = "============================================================================================================\n" +
-            "РЕЖИМ ADMIN — справка\n" +
-            "\n" +
-            "ИСПОЛЬЗОВАНИЕ:\n" +
-            "  admin <resource> <action> [flags]\n" +
-            "\n" +
-            "РЕСУРСЫ:\n" +
-            "  ingredient   Управление ингредиентами\n" +
-            "  base         Управление основами (тестом)\n" +
-            "  crust        Управление бортиками\n" +
-            "  pizza        Управление пиццами\n";
+    public static String HELP_ADMIN = """
+            РЕЖИМ ADMIN — справка
+            ============================================================================================================
+            
+            ИСПОЛЬЗОВАНИЕ:
+              admin <resource> <action> [flags]
+            
+            ------------------------------------------------------------------------------------------------------------
+            РЕСУРСЫ:
+              ingredient   Управление ингредиентами
+              dough        Управление основами\s
+              crust        Управление бортиками
+              pizza        Управление пиццами
+            
+            """;
 
     public static String HELP_ADMIN_INGREDIENT = """
+            ------------------------------------------------------------------------------------------------------------
             INGREDIENT — ИНГРЕДИЕНТЫ:
             
               admin ingredient create --name=<str> --price=<decimal>
@@ -46,155 +57,161 @@ public class GlobalData {
                 Удалить ингредиент
             
               admin ingredient get --name=<str>
+                Получить информацию об ингредиенте
             
-              admin ingredient list [--sort-by=name|price] [--sort-type=asc|desc] [--name=<substr>] [--price=<integer>]
-                Вывести список ингредиентов (с фильтрацией и сортировкой)
+              admin ingredient list
+                Вывести список ингредиентов\s
+            
             """;
 
-    public static String HELP_ADMIN_BASE = """
-            BASE — ОСНОВЫ:
-              admin base create --name=<str> --price=<decimal>
-                Создать основу. Флаг --classic задаёт классическую основу (эталон для правила +20%)
+    public static String HELP_ADMIN_DOUGH = """
+            ------------------------------------------------------------------------------------------------------------
+            DOUGH — ОСНОВЫ:
             
-              admin base edit --name=<str> [--new-name=<str>] [--price=<decimal>]
+              admin dough create --name=<str> --price=<decimal>
+                Создать основу
+            
+              admin dough edit --name=<str> [--new-name=<str>] [--price=<decimal>]
                 Редактировать основу
             
-              admin base delete --name=<str>
+              admin dough delete --name=<str>
                 Удалить основу
             
-              admin base get --name=<str>
+              admin dough get --name=<str>
+                Получить информацию об основе
             
-              admin base list [--sort-by=name|price] [--sort-type=asc|desc] [--name=<substr>] [--price=<integer>]
+              admin dough list
                 Вывести список основ
+            
             """;
 
     public static String HELP_ADMIN_CRUST = """
+            ------------------------------------------------------------------------------------------------------------
             CRUST — БОРТИКИ:
-              admin crust create --name=<str> --ingredients=<csv> --price=<decimal> [--allow-pizzas=<csv> | --deny-pizzas=<csv>]
-                Создать бортик. Нужно указать либо список разрешённых пицц, либо запрещённых (не одновременно)
             
-              admin crust edit --name=<str> [--new-name=<str>] [--ingredients=<csv>] [--price=<decimal>] [--allow-pizzas=<csv> | --deny-pizzas=<csv>]
+              admin crust create --name=<str> --ingredients=<csv> --allowed-pizzas=<csv>
+                Создать бортик
+              admin crust edit --name=<str> [--new-name=<str>] [--ingredients=<csv>] [--allowed-pizzas=<csv> | --deny-pizzas=<csv>]
                 Редактировать бортик и правила совместимости
             
               admin crust delete --name=<str>
                 Удалить бортик
             
               admin crust get --name=<str>
+                Получить информацию о бортике
             
-              admin crust list [--sort-by=name|price] [--sort-type=asc|desc] [--name=<substr>] [--price=<integer>]
-                Вывести список бортиков (можно проверить совместимость с пиццей)
+              admin crust list\s
+                Вывести список бортиков\s
+            
             """;
 
     public static String HELP_ADMIN_PIZZA = """
+            ------------------------------------------------------------------------------------------------------------
             PIZZA — ПИЦЦЫ:
-              admin pizza create --name=<str> --base=<baseName> --ingredients=<csv> [--crust=<crustName>]
-                Создать пиццу (основа обязательна). Цена = основа + ингредиенты + бортик
             
-              admin pizza edit --name=<str> [--new-name=<str>] [--base=<baseName>] [--ingredients=<csv>][--crust=<crustName>]
+              admin pizza create --name=<str> --dough=<doughName> --ingredients=<csv> [--crust=<crustName>]
+                Создать пиццу\s
+            
+              admin pizza edit --name=<str> [--new-name=<str>] [--dough=<doughName>] [--ingredients=<csv>] [--crust=<crustName>]
                 Редактировать пиццу
             
               admin pizza delete --name=<str>
                 Удалить пиццу
             
               admin pizza get --name=<str>
+                Получить информацию о пицце
             
-              admin pizza list [--sort-by=name|price] [--sort-type=asc|desc] [--name=<substr>] [--price=<integer>]
-                Вывести список пицц (например, содержащих помидоры)
-            
+              admin pizza list\s
+                Вывести список пицц\s
+            ------------------------------------------------------------------------------------------------------------
             ВАЖНО:
-              - Пиццу нельзя создать без основы.
-              - Основа (кроме классической) не может превышать +20% её стоимости.
-              - Бортик должен быть совместим с пиццей.
-              - CSV-формат: --ingredients=cheese,tomato,meat
+              • Пиццу нельзя создать без основы.
+              • Основа (кроме классической) не может превышать +20% её стоимости.
+              • Бортик должен быть совместим с пиццей.
+              • CSV-формат: --ingredients=cheese,tomato,meat
+            
             """;
 
     public static String HELP_ORDER = """
             ============================================================================================================
-            
             РЕЖИМ ORDER — справка
+            ============================================================================================================
             
             ИСПОЛЬЗОВАНИЕ:
               order <command> [flags]
             
-            ЖИЗНЕННЫЙ ЦИКЛ ЗАКАЗА:
-              order start [--comment=<text>] [--postpone="YYYY-MM-DD HH:MM"]
-                Создать черновик заказа и сделать его активным
+            ------------------------------------------------------------------------------------------------------------
+            ORDER — ЗАКАЗЫ:
             
-              order show
-                Показать текущий активный заказ
+              order create [--comment=<"str">] [--scheduled-date=<ГГГГ-ММ-ДДТЧЧ:ММ>]
+                Создать новый заказ
             
-              order comment --text=<text>
-                Добавить или изменить комментарий
+              order edit --id=<id> [--comment=<"str">] [--scheduled-date=<ГГГГ-ММ-ДДТЧЧ:ММ>]
+                Редактировать существующий заказ
             
-              order postpone --at="YYYY-MM-DD HH:MM"
-                Сделать заказ отложенным
+              order get --id=<id>
+                Показать детальную информацию по заказу
             
-              order submit
-                Оформить заказ (генерируется UUID, фиксируется дата и время)
+              order list [--status=<str>] [--created-date-from=<str>] [--created-date-to=<str>] [--sort-by=created-date|status]
+                Вывести список заказов с фильтрацией или сортировкой
             
-              order cancel
-                Отменить текущий черновик заказа
-               \s
-            ИНФОРМАЦИЯ:
-                order info <resource>
-                    Показать список доступных опций определенного типа ресурса. Пример:\s
-                    order info pizza -- список доступных пицц
-                    order info ingredient -- список доступных ингредиентов
-                    order info base -- список доступных основ
-                    order info crust -- список доступных корочек
+              order submit --id=<id>
+                Оформить заказ (перевести в статус "подтверждён")
             
-            ДОБАВЛЕНИЕ ПИЦЦ В АКТИВНЫЙ ЗАКАЗ:
-            order pizza add-ready --size=<small|medium|large> --pizza=<pizzaName> [--double=<csv>] [--base=<baseName>] [--crust=<crustName>]
-                Добавить готовую пиццу. Можно удвоить существующие ингредиенты.
+              order split --id=<id> --guests=<int>
+                 Разделить стоимость заказа между гостями.
+                 Разница добавляется одному гостю в большую сторону.
             
-              order pizza begin-custom --size=<small|medium|large> --name=<str> --base=<baseName> [--crust=<crustName>]
-                Начать сборку кастомной пиццы (не сохраняется в каталоге)
+              order closed --id=<id>
+                 Оплатить и завершить заказ
+            """;
+
+    public static String HELP_PIZZA_ORDER = """
+            ============================================================================================================
+            РЕЖИМ PIZZA-ORDER — справка
+            ============================================================================================================
             
-              order pizza add-ingredient --name=<ingredientName> [--qty=1|2]
-                Добавить ингредиент к текущей собираемой пицце
+            ИСПОЛЬЗОВАНИЕ:
+              pizza-order <command> [flags]
             
-              order pizza remove-ingredient --name=<ingredientName>
-                Удалить ингредиент из текущей пиццы
+            ------------------------------------------------------------------------------------------------------------
+            PIZZA-ORDER — ПИЦЦЫ В ЗАКАЗЕ:
             
-              order pizza done
-                Завершить текущую пиццу и добавить её в заказ (заказ не отправляется)
+              pizza-order create --order-id=<id> --type-pizza=<custom|halved|ready|sliced> --size=<small|medium|big> --dough-name=<str>
+                Создать пиццу в указанном заказе
             
-            ПОЛОВИНА + ПОЛОВИНА:
+              pizza-order edit --id=<id> [--dough-name=<str>]
+                        ready (готовая пицца из каталога):
+                        [--name=<name>] [--doubled-ingredients=<1,2>]
             
-              order pizza add-half --size=<small|medium|large> --left=<pizzaA> --right=<pizzaB> --base=<baseName> [--crust-left=<crustName>] [--crust-right=<crustName>] [--crust=<crustName>]
-                Добавить комбинированную пиццу из двух половин
+                        custom (пользовательская пицца):
+                        [--name=<name>] [--ingredients=<1,2>]
             
-            ПОКУСОЧНАЯ ПИЦЦА:
+                        halved (половина на половину):
+                        [--left-half-name=<name>] [--left-half-doubled-ingredients=<1,2>] [--right-half-name=<name>] [--right-half-doubled-ingredients=<1,2>]
             
-              order pizza begin-slices --size=<small|medium|large> --name=<str> --base=<baseName> [--crust=<crustName>]
-                Начать сборку покусочной пиццы
+                        sliced (покусочная пицца):
+                        [--slice-number=<number>] [--slice-from=<number>] [--slice-to=<number>] [--override-slices=<true|false>] [--ingredients=<1,2>]
             
-              order slice add --slice=<n> --ingredient=<name> [--qty=1|2]
-                Добавить ингредиент на конкретный кусок (номер в пределах размера)
+                Редактировать существующую пиццу в заказе
             
-              order slice range-add --from=<n> --to=<n> --ingredient=<name> [--qty=1|2]
-                Добавить ингредиент на диапазон кусков
+              pizza-order delete --id=<id>
+                Удалить пиццу из заказа
             
-              order pizza done
-                Завершить покусочную пиццу и добавить её в заказ
+              pizza-order get --id=<id>
+                Показать детальную информацию по пицце
             
-            СПИСОК ЗАКАЗОВ:
+              pizza-order list --order-id=<id>
+                Показать список всех пицц в указанном заказе
             
-              order list [--date=YYYY-MM-DD] [--ingredient=<name>] [--size=small|medium|large] [--sort=date|total] [--desc]
-                Вывести список оформленных заказов с фильтрацией
-            
-            РАЗДЕЛЕНИЕ СТОИМОСТИ:
-            
-              order split --guests=<int>
-                Разделить стоимость заказа между гостями.
-                Деление равномерное, округление до 2 знаков.
-                Разница добавляется одному гостю в большую сторону.\s
-            
+            ------------------------------------------------------------------------------------------------------------
             ВАЖНО:
-              - Можно добавить несколько пицц в один заказ.
-              - Каждая пицца должна быть завершена командой order pizza done.
-              - Заказ завершается только командой order submit.
-              - Номер куска должен соответствовать размеру.
-              - Основа обязательна для любой пиццы.
+              • Заказ создаётся командой order create, затем в него добавляются пиццы
+              • Для каждой пиццы обязательно указывать размер и основу (тесто)
+              • Заказ завершается только командой order submit
+              • Ингредиенты указываются как CSV-список ID: --ingredients=1,2,3
+              • ID заказа и ID пиццы — это UUID
+            
+            ============================================================================================================
             """;
 }

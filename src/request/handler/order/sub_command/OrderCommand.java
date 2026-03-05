@@ -8,7 +8,9 @@ public enum OrderCommand {
     EDIT("edit", new EditCommandHandler()),
     GET("get", new GetCommandHandler()),
     LIST("list", new ListCommandHandler()),
-    SUBMIT("submit", new SubmitCommandHandler());
+    SUBMIT("submit", new SubmitCommandHandler()),
+    SPLIT("split", new SplitCommandHandler()),
+    CLOSED("closed", new ClosedCommandHandler());
 
 
     private final String command;

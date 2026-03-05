@@ -11,14 +11,11 @@ import order.model.pizza.*;
 import order.repository.PizzaOrderRepository;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import static order.model.pizza.PizzaType.*;
 
 public class PizzaOrderService {
     private final PizzaOrderRepository pizzaOrderRepository = PizzaOrderRepository.getInstance();
@@ -35,7 +32,7 @@ public class PizzaOrderService {
         pizzaOrderRepository.save(pizzaOrder);
     }
 
-    public PizzaOrder update(String id, Map<String, String> params) throws NotFoundException {
+    public PizzaOrder update(String id, Map<String, String> params) throws NotFoundException, ValidationException {
         PizzaOrder existingPizzaOrder = getById(id);
         setParamsForType(existingPizzaOrder, params);
         pizzaOrderRepository.save(existingPizzaOrder);
@@ -130,16 +127,15 @@ public class PizzaOrderService {
 
             case SLICED:
                 SlicedPizzaOrder slicedPizzaOrder = (SlicedPizzaOrder) pizzaOrder;
-                if (slicedPizzaOrder.getPizzaSize() != null) {
-                    for (SlicedPizzaOrder.Slice slice : slicedPizzaOrder.getSlices()) {
-                        if (slice.getIngredients() != null) {
-                            for (String ingredientSlice : slice.getIngredients()) {
-                                Ingredient ingredient = ingredientService.getByName(ingredientSlice);
-                                price = price.add(BigDecimal.valueOf(ingredient.getPrice() / pizzaOrder.getPizzaSize().getSliceNumber()));
-                            }
+                for (SlicedPizzaOrder.Slice slice : slicedPizzaOrder.getSlices()) {
+                    if (slice.getIngredients() != null) {
+                        for (String ingredientSlice : slice.getIngredients()) {
+                            Ingredient ingredient = ingredientService.getByName(ingredientSlice);
+                            price = price.add(BigDecimal.valueOf(ingredient.getPrice() / pizzaOrder.getPizzaSize().getSliceNumber()));
                         }
                     }
                 }
+
                 break;
         }
         pizzaOrder.setPrice(price.multiply(pizzaOrder.getPizzaSize().getPriceMultiplier()));
@@ -149,10 +145,8 @@ public class PizzaOrderService {
     // For Ready: --name=<name>, --doubled-ingredients=<1,2>
     // For Custom: --name=<name>, --ingredients=<1,2>
     // For Halved: --left-half-name=<name>, --left-half-doubled-ingredients=<1,2>, --right-half-name=<name>, --right-half-doubled-ingredients=<1,2>
-    // For Sliced = --slice-number=<1> --ingredients=<1,2>
-
-
-    private void setParamsForType(PizzaOrder pizzaOrder, Map<String, String> params) throws NotFoundException {
+    // For Sliced = --slice-number=<1> --ingredients=<1,2> --slice-from=<1> --slice-to=<3> --override-slices=<true/false>
+    private void setParamsForType(PizzaOrder pizzaOrder, Map<String, String> params) throws NotFoundException, ValidationException {
         switch (pizzaOrder.getPizzaType()) {
             case READY:
                 ReadyPizzaOrder ready = (ReadyPizzaOrder) pizzaOrder;
@@ -200,63 +194,122 @@ public class PizzaOrderService {
                 }
                 break;
             case HALVED:
-                boolean isHalvedChanged = false;
                 HalvedPizzaOrder halved = (HalvedPizzaOrder) pizzaOrder;
+                HalvedPizzaOrder.PizzaHalf existingRightHalf = halved.getRightHalf();
+                HalvedPizzaOrder.PizzaHalf existingLeftHalf = halved.getLeftHalf();
 
-                String halvedNameRight = params.get("right-half-name");
-                String ingredientsDoubleRight = params.get("right-half-doubled-ingredients");
-                if (halvedNameRight == null) {
-                    halvedNameRight = halved.getRightHalf().getName();
+                String rightHalfName = params.get("right-half-name");
+
+                if (rightHalfName == null) {
+                    rightHalfName = existingRightHalf.getName();
                 }
+                String rightHalfDoubledIngrs = params.get("right-half-doubled-ingredients");
 
-                String halvedNameLeft = params.get("right-half-name");
-                String ingredientsDoubleLeft = params.get("right-half-doubled-ingredients");
-                if (halvedNameLeft == null) {
-                    halvedNameLeft = halved.getLeftHalf().getName();
+                String leftHalfName = params.get("left-half-name");
+                if (leftHalfName == null) {
+                    leftHalfName = existingLeftHalf.getName();
                 }
-                isHalvedChanged = buildPizzaHalf(halved, params, halvedNameRight, ingredientsDoubleRight, true) ||
-                        buildPizzaHalf(halved, params, halvedNameLeft, ingredientsDoubleLeft, true);
+                String leftHalfDoubledIngrs = params.get("left-half-doubled-ingredients");
 
-                if (isHalvedChanged) {
+                boolean isRightHalfChanged = setPizzaHalfFields(existingRightHalf, rightHalfName, rightHalfDoubledIngrs);
+                boolean isLeftHalfChanged = setPizzaHalfFields(existingLeftHalf, leftHalfName, leftHalfDoubledIngrs);
+
+                if (isRightHalfChanged || isLeftHalfChanged) {
                     calculatePrice(halved);
                 }
 
+                halved.setValid(existingRightHalf.isValid() && existingLeftHalf.isValid());
+
                 break;
             case SLICED:
+                SlicedPizzaOrder sliced = (SlicedPizzaOrder) pizzaOrder;
+                String sliceNumberStr = params.get("slice-number");
+                String ingredientsStr = params.get("ingredients");
+                String sliceFromStr = params.get("slice-from");
+                String sliceToStr = params.get("slice-to");
+                boolean overrideSlicesStr = params.get("override-slices") != null && Boolean.parseBoolean(params.get("override-slices"));
 
+
+                if (ingredientsStr == null || !ingredientsStr.isEmpty()) {
+                    throw new ValidationException("Ингредиенты для нарезанной пиццы не должны быть пустыми");
+                }
+                Set<String> ingredientsToAdd = Arrays.stream(ingredientsStr.split(","))
+                        .collect(Collectors.toSet());
+                for (String ingredient : ingredientsToAdd) {
+                    ingredientService.getByName(ingredient);
+                }
+                SlicedPizzaOrder.Slice[] slices = sliced.getSlices();
+                try {
+                    if (sliceNumberStr != null) {
+                        int sliceNumber = Integer.parseInt(sliceNumberStr);
+                        if (sliceNumber < 1 || sliceNumber > sliced.getPizzaSize().getSliceNumber()) {
+                            throw new NotFoundException("Неверный номер слайса для нарезки пиццы");
+                        }
+                        SlicedPizzaOrder.Slice slice = slices[sliceNumber];
+
+                        if (overrideSlicesStr) {
+                            slice.getIngredients().clear();
+                        }
+                        slice.getIngredients().addAll(ingredientsToAdd);
+                    } else if (sliceFromStr != null && sliceToStr != null) {
+                        int sliceFrom = Integer.parseInt(sliceFromStr);
+                        int sliceTo = Integer.parseInt(sliceToStr);
+                        if (sliceFrom < 1 || sliceTo > sliced.getPizzaSize().getSliceNumber() || sliceFrom > sliceTo) {
+                            throw new NotFoundException("Неверный диапазон для нарезки пиццы");
+                        }
+                        for (int i = sliceFrom; i <= sliceTo; i++) {
+                            SlicedPizzaOrder.Slice slice = slices[i];
+                            if (overrideSlicesStr) {
+                                slice.getIngredients().clear();
+                            }
+                            slice.getIngredients().addAll(ingredientsToAdd);
+                        }
+                    } else {
+                        throw new ValidationException("Для изменения ингредиентов в нарезанной пицце необходимо указать номер слайса или диапазон слайсов, к которым применить изменения");
+                    }
+                } catch (NumberFormatException e) {
+                    throw new ValidationException("Неверный формат числа для номера слайса или диапазона слайсов");
+                }
+
+                calculatePrice(sliced);
+
+                boolean isValid = Arrays.stream(slices)
+                        .filter(slice -> slice.getIngredients() == null || slice.getIngredients().isEmpty())
+                        .findFirst()
+                        .isEmpty();
+                sliced.setValid(isValid);
                 break;
             default:
                 break;
         }
     }
 
-    private boolean buildPizzaHalf(HalvedPizzaOrder halved, Map<String, String> params,
-                                   String halvedName, String ingredientsDouble, boolean sizeRight) throws NotFoundException {
+    private boolean setPizzaHalfFields(HalvedPizzaOrder.PizzaHalf existingPizzaHalf, String pizzaName, String ingredientsDouble) throws NotFoundException {
         boolean isHalvedChanged = false;
-        Set<String> existingIngredients;
-        String name;
-
-        Set<Ingredient> ingredientsPizza = pizzaService.getByName(halvedName).getIngredients();
-        if (ingredientsDouble != null && !ingredientsDouble.isEmpty()) {
-            Set<String> ingredients = Arrays.stream(ingredientsDouble.split(",")).collect(Collectors.toSet());
-            for (String ingredient : ingredients) {
-                Ingredient existing = ingredientService.getByName(ingredient);
-                if (!ingredientsPizza.contains(existing)) {
-                    throw new NotFoundException("Ингредиент " + ingredient + " не найден в пицце " + halvedName);
-                }
-            }
-            if (sizeRight) {
-                existingIngredients = halved.getRightHalf().getDoubledIngredients();
-                name = halved.getRightHalf().getName();
-            } else {
-                existingIngredients = halved.getLeftHalf().getDoubledIngredients();
-                name = halved.getLeftHalf().getName();
-            }
-            existingIngredients.clear();
-            existingIngredients.addAll(ingredients);
+        String name = existingPizzaHalf.getName();
+        Set<Ingredient> ingredientsPizza = pizzaService.getByName(name).getIngredients();
+        if (pizzaName != null && !pizzaName.isEmpty() && !pizzaName.equals(name)) {
+            ingredientsPizza = pizzaService.getByName(pizzaName).getIngredients();
+            existingPizzaHalf.setName(pizzaName);
+            existingPizzaHalf.getDoubledIngredients().clear();
+            existingPizzaHalf.setValid(true);
             isHalvedChanged = true;
         }
-        name = halvedName;
+
+        if (ingredientsDouble != null && !ingredientsDouble.isEmpty()) {
+            Set<String> ingredientsToDouble = Arrays.stream(ingredientsDouble.split(",")).collect(Collectors.toSet());
+            for (String ingredient : ingredientsToDouble) {
+                Ingredient existing = ingredientService.getByName(ingredient);
+                if (!ingredientsPizza.contains(existing)) {
+                    throw new NotFoundException("Ингредиент " + ingredient + " не найден в пицце " + pizzaName);
+                }
+            }
+            Set<String> existingIngredients = existingPizzaHalf.getDoubledIngredients();
+            existingIngredients.clear();
+            existingIngredients.addAll(ingredientsToDouble);
+            isHalvedChanged = true;
+        }
+
         return isHalvedChanged;
     }
 }

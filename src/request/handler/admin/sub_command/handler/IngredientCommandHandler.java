@@ -19,7 +19,6 @@ public class IngredientCommandHandler extends AdminSubCommandHandler {
 
         ParamsSpec editParamsSpec = new ParamsSpec();
         editParamsSpec.addRequiredParams(List.of("--name"));
-        editParamsSpec.addOptionalParams(List.of("--new-name", "--price"));
         paramsSpecByCommand.put("edit", editParamsSpec);
 
         ParamsSpec deleteParamsSpec = new ParamsSpec();
@@ -29,6 +28,9 @@ public class IngredientCommandHandler extends AdminSubCommandHandler {
         ParamsSpec getParamsSpec = new ParamsSpec();
         getParamsSpec.addRequiredParams(List.of("--name"));
         paramsSpecByCommand.put("get", getParamsSpec);
+
+        ParamsSpec listParamsSpec = new ParamsSpec();
+        paramsSpecByCommand.put("list", listParamsSpec);
     }
 
     @Override

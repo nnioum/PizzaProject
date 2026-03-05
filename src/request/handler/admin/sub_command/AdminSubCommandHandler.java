@@ -19,8 +19,18 @@ public abstract class AdminSubCommandHandler {
                 throw new ValidationException("Некоректна введена команда " + block);
             }
         }
-        return Arrays.stream(subLineBlocks)
-                .map(s -> s.split("="))
-                .collect(Collectors.toMap(a -> a[0], a -> a[1]));
+        try {
+            return Arrays.stream(subLineBlocks)
+                    .map(s -> s.split("="))
+                    .peek(a -> {
+                        if (a[1].isEmpty()) {
+                            throw new IllegalArgumentException("Некоректно передан параметр " + a[0]);
+                        }
+                    })
+                    .collect(Collectors.toMap(a -> a[0], a -> a[1]));
+        } catch (IllegalArgumentException e) {
+            throw new ValidationException(e.getMessage());
+        }
+
     }
 }

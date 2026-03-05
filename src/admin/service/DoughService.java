@@ -4,7 +4,7 @@ import exception.NotFoundException;
 import exception.ValidationException;
 import admin.model.Dough;
 import admin.repository.in_memory.DoughInMemoryRepository;
-import admin.service.validator.DoughBaseValidator;
+import admin.service.validator.DoughValidator;
 import admin.service.validator.Validator;
 
 import java.util.ArrayList;
@@ -15,8 +15,7 @@ import static admin.data.GlobalData.CLASSIC_DOUGH;
 
 public class DoughService {
 
-    private final Validator<Dough> doughValidator = new DoughBaseValidator<>() {
-    };
+    private final Validator<Dough> doughValidator = new DoughValidator();
 
     private final DoughInMemoryRepository doughInMemoryRepository = DoughInMemoryRepository.getInstance();
 

@@ -15,14 +15,13 @@ import java.util.Set;
 public class DoughCommandHandler extends AdminSubCommandHandler {
     private final DoughController doughController = new DoughController();
 
-    public DoughCommandHandler(){
+    public DoughCommandHandler() {
         ParamsSpec createParamsSpec = new ParamsSpec();
         createParamsSpec.addRequiredParams(List.of("--name", "--price"));
         paramsSpecByCommand.put("create", createParamsSpec);
 
         ParamsSpec editParamsSpec = new ParamsSpec();
         editParamsSpec.addRequiredParams(List.of("--name"));
-        editParamsSpec.addOptionalParams(List.of("--new-name", "--price"));
         paramsSpecByCommand.put("edit", editParamsSpec);
 
         ParamsSpec deleteParamsSpec = new ParamsSpec();
@@ -32,6 +31,9 @@ public class DoughCommandHandler extends AdminSubCommandHandler {
         ParamsSpec getParamsSpec = new ParamsSpec();
         getParamsSpec.addRequiredParams(List.of("--name"));
         paramsSpecByCommand.put("get", getParamsSpec);
+
+        ParamsSpec listParamsSpec = new ParamsSpec();
+        paramsSpecByCommand.put("list", listParamsSpec);
     }
 
     @Override
@@ -55,7 +57,7 @@ public class DoughCommandHandler extends AdminSubCommandHandler {
                     }
                 }
                 doughController.create(params.get("--name"), params.get("--price"));
-                System.out.println("Создан ингредиент " + params.get("--name"));
+                System.out.println("Создана основа " + params.get("--name"));
                 break;
 
             case "edit":
@@ -67,7 +69,7 @@ public class DoughCommandHandler extends AdminSubCommandHandler {
                     }
                 }
                 doughController.update(params.get("--name"), params.get("--new-name"), params.get("--price"));
-                System.out.println("Изменен ингредиент " + params.get("--name"));
+                System.out.println("Изменена основа " + params.get("--name"));
                 break;
 
             case "delete":
@@ -79,7 +81,7 @@ public class DoughCommandHandler extends AdminSubCommandHandler {
                     }
                 }
                 doughController.delete(params.get("--name"));
-                System.out.println("Удален ингредиент " + params.get("--name"));
+                System.out.println("Удалена основа " + params.get("--name"));
                 break;
 
             case "get":
@@ -92,7 +94,7 @@ public class DoughCommandHandler extends AdminSubCommandHandler {
                 }
                 Dough dough = doughController.getByName(params.get("--name"));
                 if (dough == null) {
-                    System.out.println("Ингредиент " + dough + "не найден");
+                    System.out.println("Ингредиент " + dough + "не найдена");
                 }
                 System.out.println(dough);
                 break;

@@ -13,9 +13,10 @@ public class PizzaOrderController {
     private final PizzaOrderService pizzaOrderService = new PizzaOrderService();
     private final PizzaOrderFactory pizzaOrderFactory = new PizzaOrderFactory();
 
-    public void create(String orderId, String typePizza, String size, String doughName) throws ValidationException, NotFoundException {
+    public String create(String orderId, String typePizza, String size, String doughName) throws ValidationException, NotFoundException {
         PizzaOrder pizzaOrder = pizzaOrderFactory.buildPizzaOrder(typePizza, size, doughName, orderId);
         pizzaOrderService.create(pizzaOrder);
+        return  pizzaOrder.getId();
     }
 
     public void update(String orderId, String id, Map<String, String> params){

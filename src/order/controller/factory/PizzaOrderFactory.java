@@ -7,7 +7,7 @@ public class PizzaOrderFactory {
     public PizzaOrder buildPizzaOrder(String pizzaType, String pizzaSize, String doughName, String orderId) throws ValidationException {
         PizzaType type = PizzaType.fromString(pizzaType);
         if (type == null) {
-            throw new ValidationException("Тип пиццы " + pizzaType + " не существует");
+            throw new ValidationException("Тип пиццы введен неправильно. Доступные типы: <ready/custom/halved/sliced>");
         }
         return switch (type) {
             case READY -> new ReadyPizzaOrder(pizzaSize, doughName, orderId);

@@ -8,7 +8,7 @@ public abstract class PizzaOrder {
     protected final String id;
     protected final PizzaSize pizzaSize;
     protected final String doughName;
-    protected final BigDecimal price;
+    protected BigDecimal price;
     protected boolean isValid;
     protected final String orderId;
     protected final PizzaType pizzaType;
@@ -52,6 +52,10 @@ public abstract class PizzaOrder {
 
     public PizzaType getPizzaType() {
         return pizzaType;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
     }
 
     @Override

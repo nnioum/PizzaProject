@@ -1,14 +1,13 @@
 package order.service;
 
+import admin.model.Ingredient;
 import admin.model.Pizza;
 import admin.service.DoughService;
 import admin.service.IngredientService;
 import admin.service.PizzaService;
 import exception.NotFoundException;
 import exception.ValidationException;
-import order.model.pizza.CustomPizzaOrder;
-import order.model.pizza.PizzaOrder;
-import order.model.pizza.ReadyPizzaOrder;
+import order.model.pizza.*;
 import order.repository.PizzaOrderRepository;
 
 import java.math.BigDecimal;
@@ -31,12 +30,14 @@ public class PizzaOrderService {
     public void create(PizzaOrder pizzaOrder) throws ValidationException, NotFoundException {
         validateRequired(pizzaOrder);
         orderService.getById(pizzaOrder.getOrderId());
+        calculatePrice(pizzaOrder);
         pizzaOrderRepository.save(pizzaOrder);
     }
 
     public PizzaOrder update(String id, Map<String, String> params) throws NotFoundException {
         PizzaOrder existingPizzaOrder = getById(id);
         setParamsForType(existingPizzaOrder, params);
+        calculatePrice(existingPizzaOrder);
         pizzaOrderRepository.save(existingPizzaOrder);
         return existingPizzaOrder;
     }
@@ -80,35 +81,56 @@ public class PizzaOrderService {
     }
 
     private void calculatePrice(PizzaOrder pizzaOrder) throws NotFoundException {
-        BigDecimal price;
+        BigDecimal price = new BigDecimal("0.00");
+        price = price.add(BigDecimal.valueOf(doughService.getByName(pizzaOrder.getDoughName()).getPrice()));
         switch (pizzaOrder.getPizzaType()) {
             case READY:
-                double readyPrice = 0.0;
                 ReadyPizzaOrder readyPizzaOrder = (ReadyPizzaOrder) pizzaOrder;
                 Pizza readyPizza = pizzaService.getByName(readyPizzaOrder.getName());
-                readyPrice += readyPizza.getPrice() - readyPizza.getDough().getPrice();
-                readyPrice += doughService.getByName(readyPizzaOrder.getDoughName()).getPrice();
+                price = price.add(BigDecimal.valueOf(readyPizza.getPrice() - readyPizza.getDough().getPrice()));
+
                 Set<String> doubledIngredients = readyPizzaOrder.getDoubledIngredients();
                 for (String nameIngredient : doubledIngredients) {
-                    readyPrice += ingredientService.getByName(nameIngredient).getPrice();
+                    price = price.add(BigDecimal.valueOf(ingredientService.getByName(nameIngredient).getPrice()));
                 }
-                price = new BigDecimal(readyPrice).setScale(2, RoundingMode.HALF_UP);
                 break;
 
             case CUSTOM:
-                double customPrice = 0.0;
                 CustomPizzaOrder customPizzaOrder = (CustomPizzaOrder) pizzaOrder;
-                customPrice += doughService.getByName(customPizzaOrder.getDoughName()).getPrice();
+
                 Set<String> customIngredients = customPizzaOrder.getIngredients();
-                for(String nameIngredient: customIngredients){
-                    customPrice += ingredientService.getByName(nameIngredient).getPrice();
+                for (String nameIngredient : customIngredients) {
+                    price = price.add(BigDecimal.valueOf(ingredientService.getByName(nameIngredient).getPrice()));
                 }
-                price = new BigDecimal(customPrice).setScale(2, RoundingMode.HALF_UP);
                 break;
 
             case HALVED:
+                HalvedPizzaOrder halvedPizzaOrder = (HalvedPizzaOrder) pizzaOrder;
+                Pizza pizzaRight = pizzaService.getByName(halvedPizzaOrder.getRightHalf().getName());
+                Pizza pizzaLeft = pizzaService.getByName(halvedPizzaOrder.getLeftHalf().getName());
+
+                price = price.add(BigDecimal.valueOf((pizzaRight.getPrice() - pizzaRight.getDough().getPrice()) / 2));
+                for (String doubleIngredient : halvedPizzaOrder.getRightHalf().getDoubledIngredients()) {
+                    price = price.add(BigDecimal.valueOf((ingredientService.getByName(doubleIngredient).getPrice()) / 2));
+                }
+
+                price = price.add(BigDecimal.valueOf((pizzaLeft.getPrice() - pizzaLeft.getDough().getPrice()) / 2));
+                for (String doubleIngredient : halvedPizzaOrder.getLeftHalf().getDoubledIngredients()) {
+                    price = price.add(BigDecimal.valueOf((ingredientService.getByName(doubleIngredient).getPrice()) / 2));
+                }
+                break;
+
             case SLICED:
+                SlicedPizzaOrder slicedPizzaOrder = (SlicedPizzaOrder) pizzaOrder;
+                for (SlicedPizzaOrder.Slice slice : slicedPizzaOrder.getSlices()) {
+                    for (String ingredientSlice : slice.getIngredients()) {
+                        Ingredient ingredient = ingredientService.getByName(ingredientSlice);
+                        price = price.add(BigDecimal.valueOf(ingredient.getPrice() / pizzaOrder.getPizzaSize().getSliceNumber()));
+                    }
+                }
+                break;
         }
+        pizzaOrder.setPrice(price);
     }
 
     // Example command: id=<id>,
@@ -143,8 +165,8 @@ public class PizzaOrderService {
                 break;
             case CUSTOM:
                 CustomPizzaOrder custom = (CustomPizzaOrder) pizzaOrder;
-                String customName = params.get("--name");
-                String ingredients = params.get("--ingredients");
+                String customName = params.get("name");
+                String ingredients = params.get("ingredients");
                 boolean isCustomChanged = false;
                 if (customName != null) {
                     custom.setDisplayName(customName);

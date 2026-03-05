@@ -1,5 +1,6 @@
 package order.model.pizza;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ public class SlicedPizzaOrder extends PizzaOrder {
         return slices;
     }
 
-    public static class Slice{
+    public static class Slice {
         private final Set<String> ingredients;
 
         public Slice() {
@@ -25,5 +26,16 @@ public class SlicedPizzaOrder extends PizzaOrder {
         public Set<String> getIngredients() {
             return ingredients;
         }
+    }
+
+    @Override
+    public String toString() {
+        return "\nid - " + id + '\'' +
+                "\nРазмер пиццы - " + pizzaSize +
+                "\nТип пиццы" + pizzaType +
+                "\nОснова для пиццы - " + doughName +
+                "\nКусочки  - " + Arrays.toString(slices) +
+                "\nЦена - " + price +
+                "\nid заказа - " + orderId;
     }
 }

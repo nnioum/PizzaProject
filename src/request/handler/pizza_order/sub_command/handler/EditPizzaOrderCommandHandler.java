@@ -24,5 +24,6 @@ public class EditPizzaOrderCommandHandler extends PizzaOrderSubCommandHandler {
         }
 
         pizzaOrderController.update(id, paramByNames);
+        System.out.println("Пицца по id: " + id + " изменена");
     }
 }

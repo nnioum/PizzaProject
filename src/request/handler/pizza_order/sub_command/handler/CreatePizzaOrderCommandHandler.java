@@ -30,6 +30,6 @@ public class CreatePizzaOrderCommandHandler extends PizzaOrderSubCommandHandler 
                 params.get("type-pizza"),
                 params.get("size"),
                 params.get("dough-name"));
-        System.out.println("Создана пицца по id " + id);
+        System.out.println("Создана пицца по id: " + id);
     }
 }

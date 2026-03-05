@@ -130,7 +130,7 @@ public class PizzaOrderService {
                 }
                 break;
         }
-        pizzaOrder.setPrice(price);
+        pizzaOrder.setPrice(price.multiply(pizzaOrder.getPizzaSize().getPriceMultiplier()));
     }
 
     // Example command: id=<id>,

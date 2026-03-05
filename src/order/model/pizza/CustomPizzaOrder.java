@@ -34,7 +34,7 @@ public class CustomPizzaOrder extends PizzaOrder {
                 "\nТип пиццы - " + pizzaType +
                 "\nРазмер пиццы - " + pizzaSize +
                 "\nОснова для пиццы - " + doughName +
-                "\nИнгредиенты - " + String.join(", ", ingredients) +
+                "\nИнгредиенты - \n" + String.join(", ", ingredients) +
                 "\nЦена - " + price +
                 "\nid Заказа - " + orderId;
     }

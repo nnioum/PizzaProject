@@ -30,13 +30,13 @@ public class ReadyPizzaOrder extends PizzaOrder {
 
     @Override
     public String toString() {
-        return "id - '" + id +
-                "Тип пиццы - " + pizzaType+
-                "Размер пиццы - " + pizzaSize +
-                "Название пиццы - " + name +
-                "Основа для пиццы - " + doughName +
-                "Дублирующие ингредиенты - " + doubledIngredients +
-                "Цена - " + price +
-                "id Заказа - " + orderId;
+        return  "\nid - '" + id +
+                "\nТип пиццы - " + pizzaType+
+                "\nРазмер пиццы - " + pizzaSize +
+                "\nНазвание пиццы - " + name +
+                "\nОснова для пиццы - " + doughName +
+                "\nДублирующие ингредиенты - \n" + doubledIngredients +
+                "\nЦена - " + price +
+                "\nid Заказа - " + orderId;
     }
 }

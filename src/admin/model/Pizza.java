@@ -6,8 +6,8 @@ import java.util.Objects;
 import java.util.Set;
 
 public class Pizza extends PricedItem {
-    public Dough dough;
-    public Set<Ingredient> ingredients = new HashSet<>();
+    private Dough dough;
+    private Set<Ingredient> ingredients = new HashSet<>();
 
     public Pizza(String name) {
         super(name, 0);
@@ -53,7 +53,7 @@ public class Pizza extends PricedItem {
         return "Имя - " + getName() +
                 "\nЦена - " + getPrice() +
                 "\nОснова для пиццы - " + dough.getName() +
-                "\nИнгредиенты - " + ingredientsStr;
+                "\nИнгредиенты - \n" + ingredientsStr;
     }
 
 }

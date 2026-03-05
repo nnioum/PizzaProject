@@ -34,7 +34,7 @@ public class SlicedPizzaOrder extends PizzaOrder {
                 "\nРазмер пиццы - " + pizzaSize +
                 "\nТип пиццы" + pizzaType +
                 "\nОснова для пиццы - " + doughName +
-                "\nКусочки  - " + Arrays.toString(slices) +
+                "\nКусочки  - \n" + Arrays.toString(slices) +
                 "\nЦена - " + price +
                 "\nid заказа - " + orderId;
     }

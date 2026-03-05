@@ -40,6 +40,12 @@ public class HalvedPizzaOrder extends PizzaOrder {
         public void setDoubledIngredients(Set<String> doubledIngredients) {
             this.doubledIngredients = doubledIngredients;
         }
+
+        @Override
+        public String toString() {
+            return "Название пиццы - " + name +
+                    "\nДублирующие ингредианты - \n" + doubledIngredients;
+        }
     }
 
     @Override
@@ -48,8 +54,8 @@ public class HalvedPizzaOrder extends PizzaOrder {
                 "\nТип пиццы - " + pizzaType +
                 "\nРазмер пиццы - " + pizzaSize +
                 "\nОснова для пиццы - " + doughName +
-                "\nПервая половина пиццы - " + leftHalf +
-                "\nВторая половина пиццы - " + rightHalf +
+                "\nПервая половина пиццы - \n" + leftHalf +
+                "\nВторая половина пиццы - \n" + rightHalf +
                 "\nЦена - " + price +
                 "\nid Заказа - " + orderId;
     }

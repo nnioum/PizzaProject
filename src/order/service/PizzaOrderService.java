@@ -30,14 +30,14 @@ public class PizzaOrderService {
     public void create(PizzaOrder pizzaOrder) throws ValidationException, NotFoundException {
         validateRequired(pizzaOrder);
         orderService.getById(pizzaOrder.getOrderId());
-        calculatePrice(pizzaOrder);
+        pizzaOrder.setPrice(BigDecimal.valueOf(doughService.getByName(pizzaOrder.getDoughName()).getPrice())
+                .multiply(pizzaOrder.getPizzaSize().getPriceMultiplier()));
         pizzaOrderRepository.save(pizzaOrder);
     }
 
     public PizzaOrder update(String id, Map<String, String> params) throws NotFoundException {
         PizzaOrder existingPizzaOrder = getById(id);
         setParamsForType(existingPizzaOrder, params);
-        calculatePrice(existingPizzaOrder);
         pizzaOrderRepository.save(existingPizzaOrder);
         return existingPizzaOrder;
     }
@@ -90,8 +90,10 @@ public class PizzaOrderService {
                 price = price.add(BigDecimal.valueOf(readyPizza.getPrice() - readyPizza.getDough().getPrice()));
 
                 Set<String> doubledIngredients = readyPizzaOrder.getDoubledIngredients();
-                for (String nameIngredient : doubledIngredients) {
-                    price = price.add(BigDecimal.valueOf(ingredientService.getByName(nameIngredient).getPrice()));
+                if (doubledIngredients != null) {
+                    for (String nameIngredient : doubledIngredients) {
+                        price = price.add(BigDecimal.valueOf(ingredientService.getByName(nameIngredient).getPrice()));
+                    }
                 }
                 break;
 
@@ -99,8 +101,10 @@ public class PizzaOrderService {
                 CustomPizzaOrder customPizzaOrder = (CustomPizzaOrder) pizzaOrder;
 
                 Set<String> customIngredients = customPizzaOrder.getIngredients();
-                for (String nameIngredient : customIngredients) {
-                    price = price.add(BigDecimal.valueOf(ingredientService.getByName(nameIngredient).getPrice()));
+                if (customIngredients != null) {
+                    for (String nameIngredient : customIngredients) {
+                        price = price.add(BigDecimal.valueOf(ingredientService.getByName(nameIngredient).getPrice()));
+                    }
                 }
                 break;
 
@@ -110,22 +114,30 @@ public class PizzaOrderService {
                 Pizza pizzaLeft = pizzaService.getByName(halvedPizzaOrder.getLeftHalf().getName());
 
                 price = price.add(BigDecimal.valueOf((pizzaRight.getPrice() - pizzaRight.getDough().getPrice()) / 2));
-                for (String doubleIngredient : halvedPizzaOrder.getRightHalf().getDoubledIngredients()) {
-                    price = price.add(BigDecimal.valueOf((ingredientService.getByName(doubleIngredient).getPrice()) / 2));
+                if (halvedPizzaOrder.getRightHalf().getDoubledIngredients() != null) {
+                    for (String doubleIngredient : halvedPizzaOrder.getRightHalf().getDoubledIngredients()) {
+                        price = price.add(BigDecimal.valueOf((ingredientService.getByName(doubleIngredient).getPrice()) / 2));
+                    }
                 }
 
                 price = price.add(BigDecimal.valueOf((pizzaLeft.getPrice() - pizzaLeft.getDough().getPrice()) / 2));
-                for (String doubleIngredient : halvedPizzaOrder.getLeftHalf().getDoubledIngredients()) {
-                    price = price.add(BigDecimal.valueOf((ingredientService.getByName(doubleIngredient).getPrice()) / 2));
+                if (halvedPizzaOrder.getRightHalf().getDoubledIngredients() != null) {
+                    for (String doubleIngredient : halvedPizzaOrder.getLeftHalf().getDoubledIngredients()) {
+                        price = price.add(BigDecimal.valueOf((ingredientService.getByName(doubleIngredient).getPrice()) / 2));
+                    }
                 }
                 break;
 
             case SLICED:
                 SlicedPizzaOrder slicedPizzaOrder = (SlicedPizzaOrder) pizzaOrder;
-                for (SlicedPizzaOrder.Slice slice : slicedPizzaOrder.getSlices()) {
-                    for (String ingredientSlice : slice.getIngredients()) {
-                        Ingredient ingredient = ingredientService.getByName(ingredientSlice);
-                        price = price.add(BigDecimal.valueOf(ingredient.getPrice() / pizzaOrder.getPizzaSize().getSliceNumber()));
+                if (slicedPizzaOrder.getPizzaSize() != null) {
+                    for (SlicedPizzaOrder.Slice slice : slicedPizzaOrder.getSlices()) {
+                        if (slice.getIngredients() != null) {
+                            for (String ingredientSlice : slice.getIngredients()) {
+                                Ingredient ingredient = ingredientService.getByName(ingredientSlice);
+                                price = price.add(BigDecimal.valueOf(ingredient.getPrice() / pizzaOrder.getPizzaSize().getSliceNumber()));
+                            }
+                        }
                     }
                 }
                 break;
@@ -144,8 +156,8 @@ public class PizzaOrderService {
         switch (pizzaOrder.getPizzaType()) {
             case READY:
                 ReadyPizzaOrder ready = (ReadyPizzaOrder) pizzaOrder;
-                String name = params.get("--name");
-                String doubledIngredients = params.get("--doubled-ingredients");
+                String name = params.get("name");
+                String doubledIngredients = params.get("doubled-ingredients");
                 boolean isChanged = false;
                 if (name != null) {
                     ready.setName(name);
@@ -178,7 +190,7 @@ public class PizzaOrderService {
                         ingredientService.getByName(ingredientName);
                     }
                     Set<String> existingIngredients = custom.getIngredients();
-                    existingIngredients.clear();// зачем?
+                    existingIngredients.clear();
                     existingIngredients.addAll(ingredientSet);
                     isCustomChanged = true;
                 }
@@ -188,6 +200,26 @@ public class PizzaOrderService {
                 }
                 break;
             case HALVED:
+                boolean isHalvedChanged = false;
+                HalvedPizzaOrder halved = (HalvedPizzaOrder) pizzaOrder;
+
+                String halvedNameRight = params.get("right-half-name");
+                String ingredientsDoubleRight = params.get("right-half-doubled-ingredients");
+                if (halvedNameRight == null) {
+                    halvedNameRight = halved.getRightHalf().getName();
+                }
+
+                String halvedNameLeft = params.get("right-half-name");
+                String ingredientsDoubleLeft = params.get("right-half-doubled-ingredients");
+                if (halvedNameLeft == null) {
+                    halvedNameLeft = halved.getLeftHalf().getName();
+                }
+                isHalvedChanged = buildPizzaHalf(halved, params, halvedNameRight, ingredientsDoubleRight, true) ||
+                        buildPizzaHalf(halved, params, halvedNameLeft, ingredientsDoubleLeft, true);
+
+                if (isHalvedChanged) {
+                    calculatePrice(halved);
+                }
 
                 break;
             case SLICED:
@@ -196,5 +228,35 @@ public class PizzaOrderService {
             default:
                 break;
         }
+    }
+
+    private boolean buildPizzaHalf(HalvedPizzaOrder halved, Map<String, String> params,
+                                   String halvedName, String ingredientsDouble, boolean sizeRight) throws NotFoundException {
+        boolean isHalvedChanged = false;
+        Set<String> existingIngredients;
+        String name;
+
+        Set<Ingredient> ingredientsPizza = pizzaService.getByName(halvedName).getIngredients();
+        if (ingredientsDouble != null && !ingredientsDouble.isEmpty()) {
+            Set<String> ingredients = Arrays.stream(ingredientsDouble.split(",")).collect(Collectors.toSet());
+            for (String ingredient : ingredients) {
+                Ingredient existing = ingredientService.getByName(ingredient);
+                if (!ingredientsPizza.contains(existing)) {
+                    throw new NotFoundException("Ингредиент " + ingredient + " не найден в пицце " + halvedName);
+                }
+            }
+            if (sizeRight) {
+                existingIngredients = halved.getRightHalf().getDoubledIngredients();
+                name = halved.getRightHalf().getName();
+            } else {
+                existingIngredients = halved.getLeftHalf().getDoubledIngredients();
+                name = halved.getLeftHalf().getName();
+            }
+            existingIngredients.clear();
+            existingIngredients.addAll(ingredients);
+            isHalvedChanged = true;
+        }
+        name = halvedName;
+        return isHalvedChanged;
     }
 }

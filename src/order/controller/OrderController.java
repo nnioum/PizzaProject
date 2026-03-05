@@ -92,12 +92,12 @@ public class OrderController {
 
     public void split(String id, String count) throws NotFoundException, ValidationException {
         if (count == null) {
-            throw new ValidationException("Комманда --number обязательный");
+            throw new ValidationException("Комманда --guests обязательный");
         }
         try {
             orderService.split(id, BigDecimal.valueOf(Long.parseLong(count)));
         } catch (NumberFormatException e) {
-            throw new ValidationException("Неверный формат number");
+            throw new ValidationException("Неверный формат guests");
         }
     }
 

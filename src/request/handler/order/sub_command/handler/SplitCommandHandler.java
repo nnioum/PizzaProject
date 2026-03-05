@@ -13,7 +13,7 @@ public class SplitCommandHandler extends OrderSubCommandHandler {
     @Override
     public void handle(String... subWord) throws ValidationException, NotFoundException {
         Map<String, String> params = parseParams(subWord);
-        orderController.split(params.get("--id"), params.get("--number"));
+        orderController.split(params.get("--id"), params.get("--guests"));
         System.out.println("Ваш счет был разделен");
     }
 }

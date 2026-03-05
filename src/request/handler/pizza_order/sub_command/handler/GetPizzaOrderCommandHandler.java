@@ -14,7 +14,7 @@ public class GetPizzaOrderCommandHandler extends PizzaOrderSubCommandHandler {
     @Override
     public void handle(String... subWord) throws ValidationException, NotFoundException {
         Map<String, String> params = parseParams(subWord);
-        String id = params.get("--id");
+        String id = params.get("id");
         if (id == null) {
             System.out.println("Параметр --id обязательный");
             return;

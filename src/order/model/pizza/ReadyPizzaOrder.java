@@ -12,6 +12,22 @@ public class ReadyPizzaOrder extends PizzaOrder {
     private String name;
     private Set<String> doubledIngredients;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<String> getDoubledIngredients() {
+        return doubledIngredients;
+    }
+
+    public void setDoubledIngredients(Set<String> doubledIngredients) {
+        this.doubledIngredients = doubledIngredients;
+    }
+
     @Override
     public String toString() {
         return "id - '" + id +

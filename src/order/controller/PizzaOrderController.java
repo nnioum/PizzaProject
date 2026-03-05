@@ -19,8 +19,8 @@ public class PizzaOrderController {
         return  pizzaOrder.getId();
     }
 
-    public void update(String orderId, String id, Map<String, String> params){
-
+    public void update(String id, Map<String, String> params) throws NotFoundException {
+        pizzaOrderService.update(id, params);
     }
 
     public void delete(String id) throws ValidationException, NotFoundException {

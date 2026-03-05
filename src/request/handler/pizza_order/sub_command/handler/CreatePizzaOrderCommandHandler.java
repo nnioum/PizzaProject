@@ -13,7 +13,7 @@ public class CreatePizzaOrderCommandHandler extends PizzaOrderSubCommandHandler 
     private final PizzaOrderController pizzaOrderController = new PizzaOrderController();
 
     public CreatePizzaOrderCommandHandler() {
-        requiredCommands.addAll(Arrays.asList("--order-id", "--type-pizza", "--size", "--dough-name"));
+        requiredCommands.addAll(Arrays.asList("order-id", "type-pizza", "size", "dough-name"));
     }
 
     @Override
@@ -26,10 +26,10 @@ public class CreatePizzaOrderCommandHandler extends PizzaOrderSubCommandHandler 
             }
         }
         String id = pizzaOrderController.create(
-                params.get("--order-id"),
-                params.get("--type-pizza"),
-                params.get("--size"),
-                params.get("--dough-name"));
+                params.get("order-id"),
+                params.get("type-pizza"),
+                params.get("size"),
+                params.get("dough-name"));
         System.out.println("Создана пицца по id " + id);
     }
 }

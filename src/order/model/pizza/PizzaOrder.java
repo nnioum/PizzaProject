@@ -50,6 +50,10 @@ public abstract class PizzaOrder {
         return orderId;
     }
 
+    public PizzaType getPizzaType() {
+        return pizzaType;
+    }
+
     @Override
     public String toString() {
         return "PizzaOrder{" +

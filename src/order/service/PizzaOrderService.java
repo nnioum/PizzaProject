@@ -11,10 +11,7 @@ import order.model.pizza.*;
 import order.repository.PizzaOrderRepository;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PizzaOrderService {
@@ -92,6 +89,7 @@ public class PizzaOrderService {
                         price = price.add(BigDecimal.valueOf(ingredientService.getByName(nameIngredient).getPrice()));
                     }
                 }
+                pizzaOrder.setPrice(price.multiply(pizzaOrder.getPizzaSize().getPriceMultiplier()));
                 break;
 
             case CUSTOM:
@@ -103,6 +101,7 @@ public class PizzaOrderService {
                         price = price.add(BigDecimal.valueOf(ingredientService.getByName(nameIngredient).getPrice()));
                     }
                 }
+                pizzaOrder.setPrice(price.multiply(pizzaOrder.getPizzaSize().getPriceMultiplier()));
                 break;
 
             case HALVED:
@@ -123,22 +122,22 @@ public class PizzaOrderService {
                         price = price.add(BigDecimal.valueOf((ingredientService.getByName(doubleIngredient).getPrice()) / 2));
                     }
                 }
+                pizzaOrder.setPrice(price.multiply(pizzaOrder.getPizzaSize().getPriceMultiplier()));
                 break;
 
             case SLICED:
                 SlicedPizzaOrder slicedPizzaOrder = (SlicedPizzaOrder) pizzaOrder;
                 for (SlicedPizzaOrder.Slice slice : slicedPizzaOrder.getSlices()) {
-                    if (slice.getIngredients() != null) {
+                    if (slice != null) {
                         for (String ingredientSlice : slice.getIngredients()) {
                             Ingredient ingredient = ingredientService.getByName(ingredientSlice);
                             price = price.add(BigDecimal.valueOf(ingredient.getPrice() / pizzaOrder.getPizzaSize().getSliceNumber()));
                         }
                     }
                 }
-
+                pizzaOrder.setPrice(price.multiply(pizzaOrder.getPizzaSize().getPriceMultiplier()));
                 break;
         }
-        pizzaOrder.setPrice(price.multiply(pizzaOrder.getPizzaSize().getPriceMultiplier()));
     }
 
     // Example command: id=<id>,
@@ -229,8 +228,7 @@ public class PizzaOrderService {
                 String sliceToStr = params.get("slice-to");
                 boolean overrideSlicesStr = params.get("override-slices") != null && Boolean.parseBoolean(params.get("override-slices"));
 
-
-                if (ingredientsStr == null || !ingredientsStr.isEmpty()) {
+                if (ingredientsStr == null || ingredientsStr.isEmpty()) {
                     throw new ValidationException("Ингредиенты для нарезанной пиццы не должны быть пустыми");
                 }
                 Set<String> ingredientsToAdd = Arrays.stream(ingredientsStr.split(","))
@@ -246,11 +244,11 @@ public class PizzaOrderService {
                             throw new NotFoundException("Неверный номер слайса для нарезки пиццы");
                         }
                         SlicedPizzaOrder.Slice slice = slices[sliceNumber];
-
                         if (overrideSlicesStr) {
                             slice.getIngredients().clear();
                         }
                         slice.getIngredients().addAll(ingredientsToAdd);
+
                     } else if (sliceFromStr != null && sliceToStr != null) {
                         int sliceFrom = Integer.parseInt(sliceFromStr);
                         int sliceTo = Integer.parseInt(sliceToStr);
@@ -274,7 +272,7 @@ public class PizzaOrderService {
                 calculatePrice(sliced);
 
                 boolean isValid = Arrays.stream(slices)
-                        .filter(slice -> slice.getIngredients() == null || slice.getIngredients().isEmpty())
+                        .filter(slice -> slice == null || slice.getIngredients().isEmpty())
                         .findFirst()
                         .isEmpty();
                 sliced.setValid(isValid);

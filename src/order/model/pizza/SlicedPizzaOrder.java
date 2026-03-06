@@ -10,6 +10,9 @@ public class SlicedPizzaOrder extends PizzaOrder {
     public SlicedPizzaOrder(String pizzaSize, String doughName, String orderId) {
         super(pizzaSize, doughName, orderId, PizzaType.SLICED);
         this.slices = new Slice[this.getPizzaSize().getSliceNumber()];
+        for (int i = 0; i < this.slices.length; i++) {
+            this.slices[i] = new Slice();
+        }
     }
 
     public Slice[] getSlices() {
@@ -17,7 +20,7 @@ public class SlicedPizzaOrder extends PizzaOrder {
     }
 
     public static class Slice {
-        private final Set<String> ingredients;
+        private Set<String> ingredients = new HashSet<>();
 
         public Slice() {
             this.ingredients = new HashSet<>();

@@ -1,13 +1,15 @@
 package request.handler.admin.sub_command;
 
+import request.handler.admin.sub_command.handler.CrustCommandHandler;
 import request.handler.admin.sub_command.handler.DoughCommandHandler;
 import request.handler.admin.sub_command.handler.IngredientCommandHandler;
 import request.handler.admin.sub_command.handler.PizzaCommandHandler;
 
 public enum AdminCommand {
     INGREDIENT("ingredient", new IngredientCommandHandler()),
-    BASE("base", new DoughCommandHandler()),
-    PIZZA("pizza", new PizzaCommandHandler());
+    BASE("dough", new DoughCommandHandler()),
+    PIZZA("pizza", new PizzaCommandHandler()),
+    CRUST("crust", new CrustCommandHandler());
 
     private final String command;
     private final AdminSubCommandHandler adminSubCommandHandler;

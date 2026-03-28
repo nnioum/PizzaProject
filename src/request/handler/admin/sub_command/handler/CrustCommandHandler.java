@@ -1,9 +1,9 @@
 package request.handler.admin.sub_command.handler;
 
-import admin.controller.PizzaController;
+import admin.controller.CrustController;
+import admin.model.Crust;
 import exception.NotFoundException;
 import exception.ValidationException;
-import admin.model.Pizza;
 import request.handler.admin.sub_command.AdminSubCommandHandler;
 import request.handler.admin.sub_command.ParamsSpec;
 
@@ -12,12 +12,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class PizzaCommandHandler extends AdminSubCommandHandler {
-    private final PizzaController pizzaController = new PizzaController();
+public class CrustCommandHandler extends AdminSubCommandHandler {
 
-    public PizzaCommandHandler() {
+    private final CrustController crustController = new CrustController();
+
+    public CrustCommandHandler() {
         ParamsSpec createParamsSpec = new ParamsSpec();
-        createParamsSpec.addRequiredParams(List.of("--name", "--dough", "--ingredients"));
+        createParamsSpec.addRequiredParams(List.of("--name", "--ingredients", "--allowed-pizzas"));
         paramsSpecByCommand.put("create", createParamsSpec);
 
         ParamsSpec editParamsSpec = new ParamsSpec();
@@ -39,7 +40,7 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
     @Override
     public void handle(String... subWords) throws ValidationException, NotFoundException {
         if (subWords.length == 0) {
-            System.out.println("Не указана команда для pizza");
+            System.out.println("Не указана команда для crust");
             return;
         }
         String resourcesCommand = subWords[0];
@@ -56,8 +57,10 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
                         return;
                     }
                 }
-                pizzaController.create(params.get("--name"), params.get("--dough"), params.get("--ingredients"));
-                System.out.println("Создана пицца " + params.get("--name"));
+                Set<String> ingredients = Set.of(params.get("--ingredients").split(","));
+                Set<String> allowedPizzas = Set.of(params.get("--allowed-pizzas").split(","));
+                crustController.create(params.get("--name"), params.get("--price"), ingredients, allowedPizzas);
+                System.out.println("Создан бортик " + params.get("--name"));
                 break;
 
             case "edit":
@@ -68,9 +71,12 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
                         return;
                     }
                 }
-                pizzaController.update(params.get("--name"), params.get("--new-name"),
-                        params.get("--dough"), params.get("--ingredients"));
-                System.out.println("Изменена пицца " + params.get("--name"));
+                Set<String> ingredientsToUpdate = params.containsKey("--ingredients") ?
+                        Set.of(params.get("--ingredients").split(",")) : null;
+                Set<String> allowedPizzasToUpdate = params.containsKey("--allowed-pizzas") ?
+                        Set.of(params.get("--allowed-pizzas").split(",")) : null;
+                crustController.update(params.get("--name"), params.get("--price"), params.get("--new-name"), ingredientsToUpdate, allowedPizzasToUpdate);
+                System.out.println("Изменен бортик " + params.get("--name"));
                 break;
 
             case "delete":
@@ -81,8 +87,8 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
                         return;
                     }
                 }
-                pizzaController.delete(params.get("--name"));
-                System.out.println("Удалена пицца " + params.get("--name"));
+                crustController.delete(params.get("--name"));
+                System.out.println("Удален бортик " + params.get("--name"));
                 break;
 
             case "get":
@@ -93,11 +99,8 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
                         return;
                     }
                 }
-                Pizza pizza = pizzaController.getByName(params.get("--name"));
-                if (pizza == null) {
-                    System.out.println("Пицца " + pizza + "не найдена");
-                }
-                System.out.println(pizza);
+                Crust crust = crustController.getByName(params.get("--name"));
+                System.out.println(crust);
                 break;
 
             case "list":
@@ -108,7 +111,7 @@ public class PizzaCommandHandler extends AdminSubCommandHandler {
                         return;
                     }
                 }
-                List<String> allNames = pizzaController.getAllNames();
+                List<String> allNames = crustController.getAllNames();
                 for (String name : allNames) {
                     System.out.println(name);
                 }
